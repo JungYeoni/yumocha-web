@@ -15,7 +15,7 @@ function About({ navigate }) {
     <section className="hero">
       <div>
         <p className="eyebrow eyebrow-kr">지역의 조건을 읽는 데이터 프로젝트</p>
-        <h1>저출생 대응을<br/><em>예산 너머의 조건</em>과 함께 봅니다.</h1>
+        <h1>저출생 대응을<br/>예산 너머의 <em>조건</em>과<br/>함께 봅니다.</h1>
         <p className="lede">2016–2024년 17개 시도의 구조적 여건과 시행계획상 계획예산을 연결해, 지역마다 다른 변화의 맥락을 탐색합니다.</p>
         <div className="hero-actions"><button className="primary" onClick={() => navigate('trends')}>데이터 둘러보기 <span>→</span></button><button className="text-button" onClick={() => navigate('download')}>데이터 내려받기</button></div>
       </div>
@@ -33,7 +33,7 @@ function About({ navigate }) {
     </section>
     <section className="content-section two-col">
       <div><p className="eyebrow">WHY YUMOCHA</p><h2>숫자 하나로는<br/>지역을 설명할 수 없으니까</h2></div>
-      <div className="prose"><p>출산율의 변화는 한 해의 예산만으로 설명되지 않습니다. 일자리, 주거, 돌봄 접근성, 인구구조처럼 오랜 시간 누적된 지역의 조건과 재정대응을 같은 화면에서 살펴봅니다.</p><p>Yumocha는 정책의 인과효과를 단정하지 않습니다. 재정대응 수준과 이후 변화 사이의 <strong>조건부·시차적 연관성</strong>을 탐색하고, 데이터의 빈틈과 해석의 한계도 함께 공개합니다.</p></div>
+      <div className="prose"><p>출산율의 변화는 한 해의 예산만으로 설명되지 않습니다. 일자리, 주거, 돌봄 접근성, 인구구조처럼 오랜 시간 누적된 지역의 조건과 재정대응을 같은 화면에서 살펴봅니다.</p><p>Yumocha는 정책의 인과효과를 단정하지 않습니다. 재정대응 수준과 이후 변화 사이의 <strong>조건부·시차적 연관성</strong>을 탐색하고, 데이터의 빈틈과 해석의 한계도 함께 공개합니다.</p><p>공개된 지표 값을 그대로 옮기지 않고, 21개 구조환경지표를 원자료 기준으로 전수 재계산해 대조했습니다. 이 과정에서 산식이 다르게 적용된 사례 3건을 발견해 원자료 제공기관의 자료 수정으로 이어졌으며, 남은 지표도 결측·확인 필요 여부를 함께 표시합니다.</p></div>
     </section>
     <section className="principles">
       <article><span>STRUCTURE</span><h3>구조환경</h3><p>지역 주민의 선택을 둘러싼 인구·경제·생활 인프라 조건을 21개 지표로 살펴봅니다.</p></article>
@@ -91,7 +91,7 @@ function Structure() {
         ['가족지원','family','rgba(37,110,244,1)'],['돌봄·교육','care','rgba(37,110,244,.7)'],['주거','housing','rgba(37,110,244,.45)'],['일·생활 균형','work','rgba(37,110,244,.22)']
       ].map(([name,key,color])=>({type:'bar', name, x:regions, y:budgetRows.map(x=>x[key]), marker:{color}, hovertemplate:`%{x}<br>${name} %{y}%<extra></extra>`}))} layout={{height:360,barmode:'stack',xaxis:{tickangle:-35,fixedrange:true},yaxis:{ticksuffix:'%',range:[0,100],fixedrange:true},legend:{orientation:'h',y:1.15,x:0}}}/>
     </section>
-    <Notice type="warn">계획예산은 사업 추진 의지와 재정 규모를 보여주는 행정계획상 수치이며, 실제 집행액이나 정책효과를 의미하지 않습니다.</Notice>
+    <Notice type="warn">계획예산은 사업 추진 의지와 재정 규모를 보여주는 행정계획상 수치이며, 실제 집행액이나 정책효과를 의미하지 않습니다. 시행계획 문서의 '당해예산'은 연초에 편성한 본예산이며, 추경·이월을 반영해 연말에 확정되는 최종 집행 예산과는 다릅니다. 본 사이트는 각 연도 시행계획의 당해예산(본예산)만 합산하며, 다음 연도 문서에 기재된 전년도예산(최종예산)은 사업 폐지·명칭 변경 시 누락될 수 있어 사용하지 않습니다.</Notice>
   </>
 }
 
@@ -107,7 +107,7 @@ function Results() {
       </section>
       <aside className="panel reading-guide"><p className="eyebrow">HOW TO READ</p><h2>어떻게 읽나요?</h2><ol><li><strong>점</strong>은 추정된 연관성의 방향과 크기를 나타냅니다.</li><li><strong>가로선</strong>은 95% 신뢰구간입니다.</li><li>신뢰구간이 0을 포함하면 통계적 불확실성이 큽니다.</li></ol></aside>
     </div>
-    <section className="limitations"><div><p className="eyebrow">INTERPRETATION</p><h2>숫자보다 먼저<br/>확인할 것</h2></div><ul><li>관찰자료 분석은 미측정 교란과 역인과 가능성을 배제하지 못합니다.</li><li>계획예산은 실제 집행 시점·규모와 다를 수 있습니다.</li><li>지역별 정책 구성과 대상 집단의 차이를 계수 하나로 환원할 수 없습니다.</li><li>전국 공표값과 17개 시도의 단순평균은 구분해 표시합니다.</li></ul></section>
+    <section className="limitations"><div><p className="eyebrow">INTERPRETATION</p><h2>숫자보다 먼저<br/>확인할 것</h2></div><ul><li>관찰자료 분석은 미측정 교란과 역인과 가능성을 배제하지 못합니다.</li><li>계획예산은 실제 집행 시점·규모와 다를 수 있습니다.</li><li>지역별 정책 구성과 대상 집단의 차이를 계수 하나로 환원할 수 없습니다.</li><li>전국 공표값과 17개 시도의 단순평균은 구분해 표시합니다.</li><li>다년도로 관측치를 늘려도 같은 지역의 인접 연도 값은 서로 비슷해(자기상관), 분석의 실질 정보량은 지역 수 17개에 가깝습니다.</li></ul></section>
   </>
 }
 
@@ -131,11 +131,29 @@ export default function App() {
   const navigate = id => { location.hash = id }
   const Current = { about: About, trends: Trends, structure: Structure, results: Results, download: Download }[page] || About
   return <div className="site-shell">
-    <header className="topbar"><button className="brand" onClick={()=>navigate('about')} aria-label="Yumocha 홈"><span>Y</span><strong>Yumocha</strong></button>
+    <header className="topbar"><button className="brand" onClick={()=>navigate('about')} aria-label="Yumocha 홈"><span><img src="/logo.png" alt="" /></span><strong>Yumocha</strong></button>
       <nav className={menu?'open':''}>{pages.map(([id,label])=><button className={page===id?'active':''} key={id} onClick={()=>navigate(id)}>{label}</button>)}</nav>
       <button className="menu-button" onClick={()=>setMenu(!menu)} aria-label="메뉴 열기">{menu?'×':'☰'}</button>
     </header>
     <main className={page==='about'?'home':''}><Current navigate={navigate}/></main>
-    <footer><div className="footer-brand"><span>Y</span><div><strong>Yumocha</strong><p>지역의 조건과 재정대응을 함께 읽습니다.</p></div></div><div><p>코드 MIT · 자체 콘텐츠 CC BY 4.0</p><a href="https://github.com/JungYeoni/yumocha" target="_blank" rel="noreferrer">분석 저장소 ↗</a></div></footer>
+    <footer>
+      <div className="footer-top">
+        <div className="footer-brand"><span><img src="/logo.png" alt="" /></span><div><strong>Yumocha</strong><p>지역의 조건과 재정대응을 함께 읽습니다.</p></div></div>
+        <div className="footer-col">
+          <h3>바로가기</h3>
+          {pages.map(([id,label])=><button key={id} onClick={()=>navigate(id)}>{label}</button>)}
+        </div>
+        <div className="footer-col">
+          <h3>자료</h3>
+          <a href="https://github.com/JungYeoni/yumocha" target="_blank" rel="noreferrer">분석 저장소 ↗</a>
+          <a href="/DATA_LICENSE.md">데이터 이용조건</a>
+          <a href="/SOURCES.csv">원출처 목록</a>
+        </div>
+      </div>
+      <div className="footer-bottom">
+        <p>© 2026 Yumocha · 코드 MIT · 자체 콘텐츠 CC BY 4.0</p>
+        <div className="footer-bottom-links"><a href="/CONTENT_LICENSE.md">콘텐츠 이용조건</a><a href="/SHA256SUMS.txt">체크섬</a></div>
+      </div>
+    </footer>
   </div>
 }
