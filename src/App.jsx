@@ -14,7 +14,7 @@ function About({ navigate }) {
   return <>
     <section className="hero">
       <div>
-        <p className="eyebrow">지역의 조건을 읽는 데이터 프로젝트</p>
+        <p className="eyebrow eyebrow-kr">지역의 조건을 읽는 데이터 프로젝트</p>
         <h1>저출생 대응을<br/><em>예산 너머의 조건</em>과 함께 봅니다.</h1>
         <p className="lede">2016–2024년 17개 시도의 구조적 여건과 시행계획상 계획예산을 연결해, 지역마다 다른 변화의 맥락을 탐색합니다.</p>
         <div className="hero-actions"><button className="primary" onClick={() => navigate('trends')}>데이터 둘러보기 <span>→</span></button><button className="text-button" onClick={() => navigate('download')}>데이터 내려받기</button></div>
@@ -63,13 +63,13 @@ function Trends() {
         <div className="panel-head"><div><p className="eyebrow">{region} · 2016–2024</p><h2>{meta.label} 추세</h2></div><div className="value-chip"><strong>{last[indicator]}</strong> {meta.unit}<small>2024 구조 검증용 샘플</small></div></div>
         <Chart ariaLabel={`${region} ${meta.label} 연도별 추세`} data={[{
           x: years, y: selected.map(x => x[indicator]), type: 'scatter', mode: 'lines+markers',
-          line: { color: '#d96743', width: 3 }, marker: { color: selected.map(x => x.quality === '검증 완료' ? '#d96743' : '#fff'), line: {color:'#d96743', width:2}, size: 8 },
+          line: { color: '#cb1dd4', width: 3 }, marker: { color: selected.map(x => x.quality === '검증 완료' ? '#cb1dd4' : '#fff'), line: {color:'#cb1dd4', width:2}, size: 8 },
           hovertemplate: `%{x}년<br>%{y} ${meta.unit}<extra>${region}</extra>`,
-        }]} layout={{ height: 350, shapes: [{type:'rect', x0:2015.5, x1:2020.5, y0:0, y1:1, yref:'paper', fillcolor:'#edf4ef', line:{width:0}, layer:'below'}, {type:'rect', x0:2020.5, x1:2024.5, y0:0, y1:1, yref:'paper', fillcolor:'#f8eee8', line:{width:0}, layer:'below'}], xaxis:{dtick:1, fixedrange:true}, yaxis:{ticksuffix: meta.unit === '%' ? '%' : '', fixedrange:true, rangemode:'tozero'}, showlegend:false }}/>
+        }]} layout={{ height: 350, shapes: [{type:'rect', x0:2015.5, x1:2020.5, y0:0, y1:1, yref:'paper', fillcolor:'#eef1fb', line:{width:0}, layer:'below'}, {type:'rect', x0:2020.5, x1:2024.5, y0:0, y1:1, yref:'paper', fillcolor:'#faeef9', line:{width:0}, layer:'below'}], xaxis:{dtick:1, fixedrange:true}, yaxis:{ticksuffix: meta.unit === '%' ? '%' : '', fixedrange:true, rangemode:'tozero'}, showlegend:false }}/>
       </section>
       <aside className="panel insight-panel"><p className="eyebrow">CHANGE</p><strong className="big-change">{(last[indicator] - first[indicator]).toFixed(meta.unit === '%' ? 1 : 2)}<small>{meta.unit}</small></strong><p>2016년 대비 2024년 변화</p><hr/><p className="muted">{meta.description}</p><div className="quality-key"><span>●</span> 검증 완료 <span className="hollow">●</span> 확인 필요</div></aside>
       <section className="panel chart-panel wide"><div className="panel-head"><div><p className="eyebrow">17 REGIONS · 2024</p><h2>시도 비교</h2></div></div>
-        <Chart ariaLabel={`17개 시도 ${meta.label} 비교`} data={[{type:'bar', x: regions, y: regions.map(r => trendRows.find(x => x.region === r && x.year === 2024)[indicator]), marker:{color:regions.map(r => r === region ? '#d96743':'#a8bbb1')}, hovertemplate:`%{x}<br>%{y} ${meta.unit}<extra></extra>`}]} layout={{height:310, xaxis:{tickangle:-35, fixedrange:true}, yaxis:{rangemode:'tozero', fixedrange:true}, showlegend:false}}/>
+        <Chart ariaLabel={`17개 시도 ${meta.label} 비교`} data={[{type:'bar', x: regions, y: regions.map(r => trendRows.find(x => x.region === r && x.year === 2024)[indicator]), marker:{color:regions.map(r => r === region ? '#cb1dd4':'#a9b4c9')}, hovertemplate:`%{x}<br>%{y} ${meta.unit}<extra></extra>`}]} layout={{height:310, xaxis:{tickangle:-35, fixedrange:true}, yaxis:{rangemode:'tozero', fixedrange:true}, showlegend:false}}/>
       </section>
     </div>
     <Notice type="warn">현재 화면의 수치는 <strong>UI 구조 검증용 합성 샘플</strong>입니다. 검증 완료 데이터 연결 전에는 연구 결과로 인용할 수 없습니다. 결측값은 0으로 대체하거나 선으로 잇지 않습니다.</Notice>
@@ -83,12 +83,12 @@ function Structure() {
     <div className="metric-row"><Metric label="분석 지역" value="17" sub="전국 광역 시도"/><Metric label="구조환경지표" value="21" sub="원자료 검증 완료"/><Metric label="예산 기준" value="당해예산" sub="전년도예산 제외"/><Metric label="데이터 기간" value="9년" sub="2016–2024"/></div>
     <section className="panel chart-panel">
       <div className="panel-head"><div><p className="eyebrow">PLANNED BUDGET</p><h2>지역별 계획예산 비교</h2></div><p className="muted">단위: 억 원 · 구조 검증용 샘플</p></div>
-      <Chart ariaLabel="지역별 계획예산 막대 차트" data={[{type:'bar', orientation:'h', y:sorted.map(x=>x.region).reverse(), x:sorted.map(x=>x.budget).reverse(), marker:{color:sorted.map((_,i)=>`rgba(33, 93, 74, ${.42 + i/40})`).reverse()}, hovertemplate:'%{y}<br>%{x:,.0f}억 원<extra></extra>'}]} layout={{height:500, margin:{...plotLayout.margin,l:45}, xaxis:{tickformat:',', fixedrange:true}, yaxis:{fixedrange:true}, showlegend:false}}/>
+      <Chart ariaLabel="지역별 계획예산 막대 차트" data={[{type:'bar', orientation:'h', y:sorted.map(x=>x.region).reverse(), x:sorted.map(x=>x.budget).reverse(), marker:{color:sorted.map((_,i)=>`rgba(36, 55, 123, ${.42 + i/40})`).reverse()}, hovertemplate:'%{y}<br>%{x:,.0f}억 원<extra></extra>'}]} layout={{height:500, margin:{...plotLayout.margin,l:45}, xaxis:{tickformat:',', fixedrange:true}, yaxis:{fixedrange:true}, showlegend:false}}/>
     </section>
     <section className="panel chart-panel">
       <div className="panel-head"><div><p className="eyebrow">POLICY MIX</p><h2>정책영역별 예산 구성</h2></div></div>
       <Chart ariaLabel="지역별 정책영역 예산 구성 차트" data={[
-        ['가족지원','family','#225f4e'],['돌봄·교육','care','#75a28c'],['주거','housing','#e7a16f'],['일·생활 균형','work','#d3c8af']
+        ['가족지원','family','#24377b'],['돌봄·교육','care','#697ec4'],['주거','housing','#cb1dd4'],['일·생활 균형','work','#b87fb1']
       ].map(([name,key,color])=>({type:'bar', name, x:regions, y:budgetRows.map(x=>x[key]), marker:{color}, hovertemplate:`%{x}<br>${name} %{y}%<extra></extra>`}))} layout={{height:360,barmode:'stack',xaxis:{tickangle:-35,fixedrange:true},yaxis:{ticksuffix:'%',range:[0,100],fixedrange:true},legend:{orientation:'h',y:1.15,x:0}}}/>
     </section>
     <Notice type="warn">계획예산은 사업 추진 의지와 재정 규모를 보여주는 행정계획상 수치이며, 실제 집행액이나 정책효과를 의미하지 않습니다.</Notice>
@@ -103,7 +103,7 @@ function Results() {
     <div className="metric-row"><Metric label="분석 단위" value="지역 × 연도" sub="패널 데이터"/><Metric label="시차 설정" value="t+1 · t+2" sub="1년·2년 후 변화"/><Metric label="추정 대상" value="조건부 연관성" sub="인과효과 아님"/></div>
     <div className="results-grid">
       <section className="panel chart-panel"><div className="panel-head"><div><p className="eyebrow">COEFFICIENT PLOT</p><h2>핵심 회귀계수와 95% 신뢰구간</h2></div></div>
-        <Chart ariaLabel="회귀계수와 신뢰구간 예시" data={[{type:'scatter',mode:'markers',y:coef.map(x=>x.lag),x:coef.map(x=>x.x),error_x:{type:'data',symmetric:false,array:coef.map(x=>x.hi-x.x),arrayminus:coef.map(x=>x.x-x.lo),color:'#d96743',thickness:2,width:5},marker:{size:12,color:'#d96743'},hovertemplate:'%{y}<br>계수 %{x:.3f}<extra>설명용 가상값</extra>'}]} layout={{height:300,shapes:[{type:'line',x0:0,x1:0,y0:-.5,y1:1.5,line:{color:'#718078',dash:'dot'}}],xaxis:{title:'표준화 회귀계수',fixedrange:true},yaxis:{fixedrange:true},showlegend:false}}/>
+        <Chart ariaLabel="회귀계수와 신뢰구간 예시" data={[{type:'scatter',mode:'markers',y:coef.map(x=>x.lag),x:coef.map(x=>x.x),error_x:{type:'data',symmetric:false,array:coef.map(x=>x.hi-x.x),arrayminus:coef.map(x=>x.x-x.lo),color:'#cb1dd4',thickness:2,width:5},marker:{size:12,color:'#cb1dd4'},hovertemplate:'%{y}<br>계수 %{x:.3f}<extra>설명용 가상값</extra>'}]} layout={{height:300,shapes:[{type:'line',x0:0,x1:0,y0:-.5,y1:1.5,line:{color:'#8a94a8',dash:'dot'}}],xaxis:{title:'표준화 회귀계수',fixedrange:true},yaxis:{fixedrange:true},showlegend:false}}/>
       </section>
       <aside className="panel reading-guide"><p className="eyebrow">HOW TO READ</p><h2>어떻게 읽나요?</h2><ol><li><strong>점</strong>은 추정된 연관성의 방향과 크기를 나타냅니다.</li><li><strong>가로선</strong>은 95% 신뢰구간입니다.</li><li>신뢰구간이 0을 포함하면 통계적 불확실성이 큽니다.</li></ol></aside>
     </div>
