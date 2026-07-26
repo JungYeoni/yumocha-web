@@ -3,9 +3,9 @@ import Plot from 'react-plotly.js'
 export const plotConfig = { displaylogo: false, responsive: true, modeBarButtonsToRemove: ['lasso2d', 'select2d', 'autoScale2d'] }
 export const plotLayout = {
   paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
-  font: { family: 'Noto Sans KR, sans-serif', color: '#1f2328', size: 12 },
+  font: { family: 'Pretendard GOV, sans-serif', color: '#1E2124', size: 12 },
   margin: { t: 24, r: 20, b: 48, l: 52 },
-  hoverlabel: { bgcolor: '#256ef4', bordercolor: '#256ef4', font: { color: 'white' } },
+  hoverlabel: { bgcolor: '#246BEB', bordercolor: '#246BEB', font: { color: 'white' } },
 }
 
 export function Chart({ data, layout = {}, ariaLabel }) {
