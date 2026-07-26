@@ -11,9 +11,9 @@ export const trendRows = regions.flatMap((region, r) => years.map((year, i) => (
 })))
 
 export const indicators = [
-  { value: 'fertility', label: '합계출산율', unit: '명', description: '여성 1명이 평생 낳을 것으로 예상되는 평균 출생아 수' },
-  { value: 'youthShare', label: '청년인구 비중', unit: '%', description: '전체 주민등록인구 중 청년인구가 차지하는 비중' },
-  { value: 'childcare', label: '국공립 보육 수용률', unit: '%', description: '보육 인프라의 지역별 접근 여건을 나타내는 구조환경지표' },
+  { value: 'fertility', label: '합계출산율', unit: '명', description: '여성 1명이 평생 낳을 것으로 예상되는 평균 출생아 수. 재정대응과의 연관성을 살펴보는 종속변수로 사용합니다.' },
+  { value: 'youthShare', label: '청년고용률', unit: '%', description: '20~34세 인구 중 취업자 비중(청년 취업자 수 ÷ 청년 인구 수 × 100). 21개 구조환경지표 중 하나입니다.' },
+  { value: 'childcare', label: '보육시설 보급률', unit: '%', description: '0~4세 인구 대비 보육시설 정원 비율(보육시설 정원 ÷ 0~4세 인구 × 100). 원자료 검증 과정에서 산식 오류가 확인되어 재정팀 자료가 수정된 지표입니다.' },
 ]
 
 export const budgetRows = regions.map((region, i) => ({
