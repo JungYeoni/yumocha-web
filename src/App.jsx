@@ -53,6 +53,7 @@ function Trends() {
   const last = selected.at(-1)
   const first = selected[0]
   const c = themeColors[useTheme()]
+  const isReal = indicator === 'fertility'
   return <>
     <PageHeader eyebrow="탐색 01" title="지역·연도 추세" description="지역의 시간적 변화와 17개 시도의 상대적 위치를 함께 살펴보세요."/>
     <div className="filter-bar">
@@ -62,7 +63,7 @@ function Trends() {
     </div>
     <div className="dashboard-grid">
       <section className="panel chart-panel wide">
-        <div className="panel-head"><div><p className="eyebrow">{region} · 2016–2024</p><h2>{meta.label} 추세</h2></div><div className="value-chip"><strong>{last[indicator]}</strong> {meta.unit}<small>2024 구조 검증용 샘플</small></div></div>
+        <div className="panel-head"><div><p className="eyebrow">{region} · 2016–2024</p><h2>{meta.label} 추세</h2></div><div className="value-chip"><strong>{last[indicator]}</strong> {meta.unit}<small>{last.year} {isReal ? '통계청 공표값' : '구조 검증용 샘플'}</small></div></div>
         <Chart ariaLabel={`${region} ${meta.label} 연도별 추세`} data={[{
           x: years, y: selected.map(x => x[indicator]), type: 'scatter', mode: 'lines+markers',
           line: { color: c.accent, width: 3 }, marker: { color: selected.map(x => x.quality === '검증 완료' ? c.accent : '#fff'), line: {color:c.accent, width:2}, size: 8 },
@@ -74,7 +75,9 @@ function Trends() {
         <Chart ariaLabel={`17개 시도 ${meta.label} 비교`} data={[{type:'bar', x: regions, y: regions.map(r => trendRows.find(x => x.region === r && x.year === 2024)[indicator]), marker:{color:regions.map(r => r === region ? c.accent : c.mutedBar)}, hovertemplate:`%{x}<br>%{y} ${meta.unit}<extra></extra>`}]} layout={{height:310, xaxis:{tickangle:-35, fixedrange:true}, yaxis:{rangemode:'tozero', fixedrange:true}, showlegend:false}}/>
       </section>
     </div>
-    <Notice type="warn">현재 화면의 수치는 <strong>UI 구조 검증용 합성 샘플</strong>입니다. 검증 완료 데이터 연결 전에는 연구 결과로 인용할 수 없습니다. 결측값은 0으로 대체하거나 선으로 잇지 않습니다.</Notice>
+    {isReal
+      ? <Notice>합계출산율은 통계청이 공표한 지역·연도별 실측치입니다. 나머지 두 지표(청년고용률, 보육시설 보급률)는 21개 구조환경지표 정제본 공개 전까지 <strong>UI 구조 검증용 합성 샘플</strong>로 표시됩니다.</Notice>
+      : <Notice type="warn">현재 선택한 지표의 수치는 <strong>UI 구조 검증용 합성 샘플</strong>입니다. 검증 완료 데이터 연결 전에는 연구 결과로 인용할 수 없습니다. 결측값은 0으로 대체하거나 선으로 잇지 않습니다.</Notice>}
   </>
 }
 
