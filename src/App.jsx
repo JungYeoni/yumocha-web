@@ -55,7 +55,7 @@ function Trends() {
   const c = themeColors[useTheme()]
   const isReal = indicator === 'fertility'
   return <>
-    <PageHeader eyebrow="탐색 01" title="지역·연도 추세" description="지역의 시간적 변화와 17개 시도의 상대적 위치를 함께 살펴보세요."/>
+    <PageHeader eyebrow="추세" title="지역·연도 추세" description="지역의 시간적 변화와 17개 시도의 상대적 위치를 함께 살펴보세요."/>
     <div className="filter-bar">
       <label>지역<select value={region} onChange={e => setRegion(e.target.value)}>{regions.map(x => <option key={x}>{x}</option>)}</select></label>
       <label>지표<select value={indicator} onChange={e => setIndicator(e.target.value)}>{indicators.map(x => <option value={x.value} key={x.value}>{x.label}</option>)}</select></label>
@@ -86,7 +86,7 @@ function Structure() {
   const sorted = [...budgetRows].sort((a,b) => b.budget-a.budget)
   const c = themeColors[useTheme()]
   return <>
-    <PageHeader eyebrow="탐색 02" title="구조환경·재정 현황" description="지역의 구조적 여건과 계획예산의 규모·구성을 나란히 비교합니다."/>
+    <PageHeader eyebrow="현황" title="구조환경·재정 현황" description="지역의 구조적 여건과 계획예산의 규모·구성을 나란히 비교합니다."/>
     <div className="metric-row"><Metric label="분석 지역" value="17" sub="전국 광역 시도"/><Metric label="구조환경지표" value="21" sub="원자료 검증 완료"/><Metric label="예산 기준" value="당해예산" sub="전년도예산 제외"/><Metric label="데이터 기간" value="9년" sub="2016–2024"/></div>
     <section className="panel chart-panel">
       <div className="panel-head"><div><p className="eyebrow eyebrow-kr">계획예산</p><h2>지역별 계획예산 비교</h2></div><div className="panel-head-note"><p className="muted">단위: 억 원 · 구조 검증용 샘플</p><a className="text-button-inline" href="https://www.betterfuture.go.kr/front/policySpace/actionPlan.do" target="_blank" rel="noreferrer">시행계획 원문 보기 ↗</a></div></div>
