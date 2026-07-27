@@ -61,6 +61,7 @@ function Trends() {
       <label>지표<select value={indicator} onChange={e => setIndicator(e.target.value)}>{indicators.map(x => <option value={x.value} key={x.value}>{x.label}</option>)}</select></label>
       <div className="legend"><span className="dot plan3"/>제3차 기본계획<span className="dot plan4"/>제4차 기본계획</div>
     </div>
+    <p className="muted legend-note">2021년 제4차 기본계획부터 정책 목표·대상 가족 개념 자체가 재편되었습니다 — 자세한 내용은 분석 결과 페이지 참고.</p>
     <div className="dashboard-grid">
       <section className="panel chart-panel wide">
         <div className="panel-head"><div><p className="eyebrow">{region} · 2016–2024</p><h2>{meta.label} 추세</h2></div><div className="value-chip"><strong>{last[indicator]}</strong> {meta.unit}<small>{last.year} {isReal ? '통계청 공표값' : '구조 검증용 샘플'}</small></div></div>
@@ -114,7 +115,7 @@ function Results() {
       </section>
       <aside className="panel reading-guide"><p className="eyebrow eyebrow-kr">읽는 법</p><h2>어떻게 읽나요?</h2><ol><li><strong>점</strong>은 추정된 연관성의 방향과 크기를 나타냅니다.</li><li><strong>가로선</strong>은 95% 신뢰구간입니다.</li><li>신뢰구간이 0을 포함하면 통계적 불확실성이 큽니다.</li></ol></aside>
     </div>
-    <section className="limitations"><div><p className="eyebrow eyebrow-kr">해석</p><h2>숫자보다 먼저<br/>확인할 것</h2></div><ul><li>관찰자료 분석은 미측정 교란과 역인과 가능성을 배제하지 못합니다.</li><li>계획예산은 실제 집행 시점·규모와 다를 수 있습니다.</li><li>지역별 정책 구성과 대상 집단의 차이를 계수 하나로 환원할 수 없습니다.</li><li>전국 공표값과 17개 시도의 단순평균은 구분해 표시합니다.</li><li>다년도로 관측치를 늘려도 같은 지역의 인접 연도 값은 서로 비슷해(자기상관), 분석의 실질 정보량은 지역 수 17개에 가깝습니다.</li></ul></section>
+    <section className="limitations"><div><p className="eyebrow eyebrow-kr">해석</p><h2>숫자보다 먼저<br/>확인할 것</h2></div><ul><li>관찰자료 분석은 미측정 교란과 역인과 가능성을 배제하지 못합니다.</li><li>계획예산은 실제 집행 시점·규모와 다를 수 있습니다.</li><li>지역별 정책 구성과 대상 집단의 차이를 계수 하나로 환원할 수 없습니다.</li><li>전국 공표값과 17개 시도의 단순평균은 구분해 표시합니다.</li><li>다년도로 관측치를 늘려도 같은 지역의 인접 연도 값은 서로 비슷해(자기상관), 분석의 실질 정보량은 지역 수 17개에 가깝습니다.</li><li>2021년 제4차 기본계획부터 정책 목표와 대상 가족 개념 자체가 재편(출산율 목표치 폐기, 삶의 질·성평등 중심으로 전환)되어, 제3차·제4차 기간의 "저출산 대응 예산"이 같은 기준으로 집계된 것이 아닐 수 있습니다.</li></ul></section>
   </>
 }
 
