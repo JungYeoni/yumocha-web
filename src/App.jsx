@@ -88,7 +88,7 @@ function Structure() {
     <PageHeader eyebrow="탐색 02" title="구조환경·재정 현황" description="지역의 구조적 여건과 계획예산의 규모·구성을 나란히 비교합니다."/>
     <div className="metric-row"><Metric label="분석 지역" value="17" sub="전국 광역 시도"/><Metric label="구조환경지표" value="21" sub="원자료 검증 완료"/><Metric label="예산 기준" value="당해예산" sub="전년도예산 제외"/><Metric label="데이터 기간" value="9년" sub="2016–2024"/></div>
     <section className="panel chart-panel">
-      <div className="panel-head"><div><p className="eyebrow eyebrow-kr">계획예산</p><h2>지역별 계획예산 비교</h2></div><p className="muted">단위: 억 원 · 구조 검증용 샘플</p></div>
+      <div className="panel-head"><div><p className="eyebrow eyebrow-kr">계획예산</p><h2>지역별 계획예산 비교</h2></div><div className="panel-head-note"><p className="muted">단위: 억 원 · 구조 검증용 샘플</p><a className="text-button-inline" href="https://www.betterfuture.go.kr/front/policySpace/actionPlan.do" target="_blank" rel="noreferrer">시행계획 원문 보기 ↗</a></div></div>
       <Chart ariaLabel="지역별 계획예산 막대 차트" data={[{type:'bar', orientation:'h', y:sorted.map(x=>x.region).reverse(), x:sorted.map(x=>x.budget).reverse(), marker:{color:sorted.map((_,i)=>`rgba(${c.accentRgb}, ${.42 + i/40})`).reverse()}, hovertemplate:'%{y}<br>%{x:,.0f}억 원<extra></extra>'}]} layout={{height:500, margin:{...plotLayout.margin,l:45}, xaxis:{tickformat:',', fixedrange:true}, yaxis:{fixedrange:true}, showlegend:false}}/>
     </section>
     <section className="panel chart-panel">
@@ -126,8 +126,18 @@ function Download({ navigate }) {
       <div className="download-head"><span>파일</span><span>행 수</span><span>크기</span><span>상태</span></div>
       {files.map(x=>{
         const ready = x.status === '공개'
-        const Row = ready ? 'a' : 'article'
-        return <Row key={x.file} className={ready?'downloadable':''} {...(ready?{href:`/${x.file}`,download:true}:{})}><div><span className="file-icon">↓</span><div><strong>{x.name}</strong><code>{x.file}</code><p>{x.description}</p></div></div><span>{x.rows}</span><span>{x.size}</span><span className={ready?'file-status ready':'file-status'}>{x.status}</span></Row>
+        return <article key={x.file} className={ready?'downloadable':''}>
+          <div>
+            {ready ? <a className="file-icon" href={`/${x.file}`} download aria-label={`${x.name} 다운로드`}>↓</a> : <span className="file-icon">↓</span>}
+            <div>
+              {ready ? <a href={`/${x.file}`} download><strong>{x.name}</strong></a> : <strong>{x.name}</strong>}
+              <code>{x.file}</code>
+              <p>{x.description}</p>
+              {x.sourceUrl && <a className="file-source-link" href={x.sourceUrl} target="_blank" rel="noreferrer">{x.sourceLabel} ↗</a>}
+            </div>
+          </div>
+          <span>{x.rows}</span><span>{x.size}</span><span className={ready?'file-status ready':'file-status'}>{x.status}</span>
+        </article>
       })}
     </section>
     <section className="license-box"><div><p className="eyebrow eyebrow-kr">데이터 이용</p><h2>데이터 이용조건</h2></div><div><p>프로젝트가 독자적으로 생성한 데이터 구조, 품질 플래그, 집계값 및 분석 결과는 별도 표시가 없는 한 <strong>CC BY 4.0</strong>으로 제공합니다.</p><p>원자료에서 유래한 항목의 권리는 각 제공기관에 있으며 원출처 이용조건이 우선 적용됩니다. 본 데이터는 공공기관의 공식 승인이나 보증을 의미하지 않습니다.</p><div className="inline-links"><button onClick={()=>navigate('license')}>데이터 이용조건</button><button onClick={()=>navigate('sources')}>원출처 목록 ↗</button><button onClick={()=>navigate('checksums')}>체크섬</button></div></div></section>
