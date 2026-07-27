@@ -152,19 +152,27 @@ export default function App() {
       <div className="footer-top">
         <div className="footer-brand"><span><img src="/logo.png" alt="" /></span><div><strong>Yumocha</strong><p>지역의 조건과 재정대응을 함께 읽습니다.</p></div></div>
         <div className="footer-col">
+          <h3>연락처</h3>
+          <a href="https://github.com/JungYeoni/yumocha-web/issues" target="_blank" rel="noreferrer">GitHub 이슈로 문의 ↗</a>
+        </div>
+        <div className="footer-col">
           <h3>바로가기</h3>
           {pages.map(([id,label])=><button key={id} onClick={()=>navigate(id)}>{label}</button>)}
         </div>
         <div className="footer-col">
-          <h3>자료</h3>
+          <h3>관련 사이트</h3>
           <a href="https://github.com/JungYeoni/yumocha" target="_blank" rel="noreferrer">분석 저장소 ↗</a>
-          <a href="/DATA_LICENSE.md">데이터 이용조건</a>
           <a href="/SOURCES.csv">원출처 목록</a>
         </div>
       </div>
+      <div className="footer-policy">
+        <a href="/PRIVACY_POLICY.md"><strong>개인정보처리방침</strong></a>
+        <a href="/DATA_LICENSE.md">데이터 이용조건</a>
+        <a href="/CONTENT_LICENSE.md">콘텐츠 이용조건</a>
+        <a href="/SHA256SUMS.txt">체크섬</a>
+      </div>
       <div className="footer-bottom">
         <p>© 2026 Yumocha · 코드 MIT · 자체 콘텐츠 CC BY 4.0</p>
-        <div className="footer-bottom-links"><a href="/CONTENT_LICENSE.md">콘텐츠 이용조건</a><a href="/SHA256SUMS.txt">체크섬</a></div>
       </div>
     </footer>
   </div></ThemeContext.Provider>
