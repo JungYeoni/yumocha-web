@@ -1,1 +1,7 @@
 # 데이터 릴리스 생성 시 파일별 SHA-256 체크섬이 기록됩니다.
+# 최종 갱신: 2026-07-27
+
+7c5a25277216b1df16261b771d3d83f8223d620631baa3eb8d6265b6fce2e866  analysis_panel.csv
+b8e613ba815817bd6560a3faa2b9ae2b73ebb944b5fef4d25af7b031fde9c467  regional_budget_summary.csv
+a5c2ba524e032fb0a4c78e433840c9a4e671f7a30c161f78bef5d823be0c24d7  quality_flags.csv
+24787e561b613b801891041b69477eb5bb42b20e733e63e3a8abb08e802cb2b9  national_fertility_trend.csv

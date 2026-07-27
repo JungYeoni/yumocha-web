@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Chart, Metric, Notice, PageHeader, plotLayout } from './components'
-import { budgetRows, files, indicators, regions, trendRows, years } from './data'
+import { budgetRows, checksums, files, indicators, regions, sources, trendRows, years } from './data'
 import { ThemeContext, useTheme, themeColors } from './theme'
 
 const pages = [
@@ -115,15 +115,99 @@ function Results() {
   </>
 }
 
-function Download() {
+function Download({ navigate }) {
   return <>
-    <PageHeader eyebrow="공개 데이터" title="데이터 다운로드" description="분석에 사용한 집계 데이터와 품질 정보를 버전 단위로 공개합니다."><div className="version-card"><span>최신 버전</span><strong>출시 준비 중</strong><small>생성일 —</small></div></PageHeader>
-    <Notice type="warn">원문이 대량 포함된 전체 정제본은 원출처별 재배포 조건 감사가 끝날 때까지 공개하지 않습니다.</Notice>
+    <PageHeader eyebrow="공개 데이터" title="데이터 다운로드" description="분석에 사용한 집계 데이터와 품질 정보를 버전 단위로 공개합니다."><div className="version-card"><span>최신 버전</span><strong>v0.1.0 · 부분 공개</strong><small>생성일 2026-07-27</small></div></PageHeader>
+    <Notice type="warn">계획예산·QA 집계 등 이 프로젝트가 직접 생성한 파일부터 우선 공개합니다. 21개 구조환경지표의 원자료 측정값이 포함된 정제본은 원출처별 재배포 조건 확인이 끝날 때까지 공개하지 않습니다.</Notice>
     <section className="download-list">
       <div className="download-head"><span>파일</span><span>행 수</span><span>크기</span><span>상태</span></div>
-      {files.map(x=><article key={x.file}><div><span className="file-icon">↓</span><div><strong>{x.name}</strong><code>{x.file}</code><p>{x.description}</p></div></div><span>{x.rows}</span><span>{x.size}</span><span className="file-status">{x.status}</span></article>)}
+      {files.map(x=>{
+        const ready = x.status === '다운로드'
+        const Row = ready ? 'a' : 'article'
+        return <Row key={x.file} className={ready?'downloadable':''} {...(ready?{href:`/${x.file}`,download:true}:{})}><div><span className="file-icon">↓</span><div><strong>{x.name}</strong><code>{x.file}</code><p>{x.description}</p></div></div><span>{x.rows}</span><span>{x.size}</span><span className={ready?'file-status ready':'file-status'}>{x.status}</span></Row>
+      })}
     </section>
-    <section className="license-box"><div><p className="eyebrow eyebrow-kr">데이터 이용</p><h2>데이터 이용조건</h2></div><div><p>프로젝트가 독자적으로 생성한 데이터 구조, 품질 플래그, 집계값 및 분석 결과는 별도 표시가 없는 한 <strong>CC BY 4.0</strong>으로 제공합니다.</p><p>원자료에서 유래한 항목의 권리는 각 제공기관에 있으며 원출처 이용조건이 우선 적용됩니다. 본 데이터는 공공기관의 공식 승인이나 보증을 의미하지 않습니다.</p><div className="inline-links"><a href="/DATA_LICENSE.md">데이터 이용조건</a><a href="/SOURCES.csv">원출처 목록</a><a href="/SHA256SUMS.txt">체크섬</a></div></div></section>
+    <section className="license-box"><div><p className="eyebrow eyebrow-kr">데이터 이용</p><h2>데이터 이용조건</h2></div><div><p>프로젝트가 독자적으로 생성한 데이터 구조, 품질 플래그, 집계값 및 분석 결과는 별도 표시가 없는 한 <strong>CC BY 4.0</strong>으로 제공합니다.</p><p>원자료에서 유래한 항목의 권리는 각 제공기관에 있으며 원출처 이용조건이 우선 적용됩니다. 본 데이터는 공공기관의 공식 승인이나 보증을 의미하지 않습니다.</p><div className="inline-links"><button onClick={()=>navigate('license')}>데이터 이용조건</button><button onClick={()=>navigate('sources')}>원출처 목록 ↗</button><button onClick={()=>navigate('checksums')}>체크섬</button></div></div></section>
+  </>
+}
+
+function DataLicense({ navigate }) {
+  return <>
+    <PageHeader eyebrow="공개 데이터" title="데이터 이용조건" description="이 프로젝트가 만든 데이터 구조·집계값과 원자료의 권리 구분을 안내합니다."/>
+    <section className="content-section">
+      <div className="prose">
+        <p>본 프로젝트가 독자적으로 생성한 데이터 구조, 품질 플래그, 집계값 및 분석 결과는 별도 표시가 없는 한 <strong>CC BY 4.0</strong>으로 제공합니다.</p>
+        <p>원자료에서 유래한 항목의 권리는 각 원자료 제공기관에 있으며 해당 자료에는 원출처 이용조건이 우선 적용됩니다. 자세한 출처와 이용조건은 <button className="text-button-inline" onClick={()=>navigate('sources')}>원출처 목록</button>을 확인하십시오.</p>
+        <p>본 데이터는 공공기관의 공식 승인이나 보증을 의미하지 않으며 계획예산은 실제 집행액과 다를 수 있습니다.</p>
+      </div>
+    </section>
+    <p className="back-link"><button className="text-button" onClick={()=>navigate('download')}>← 데이터 다운로드로 돌아가기</button></p>
+  </>
+}
+
+function ContentLicense({ navigate }) {
+  return <>
+    <PageHeader eyebrow="공개 데이터" title="콘텐츠 이용조건" description="사이트에 직접 작성한 설명문·그래프의 이용조건입니다."/>
+    <section className="content-section">
+      <div className="prose">
+        <p>별도 표시가 없는 한 이 저장소에서 직접 작성한 설명문과 그래프는 <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" target="_blank" rel="noreferrer">Creative Commons Attribution 4.0 International</a>로 제공합니다.</p>
+        <p>© 2026 LeeJungYeon</p>
+      </div>
+    </section>
+    <p className="back-link"><button className="text-button" onClick={()=>navigate('download')}>← 데이터 다운로드로 돌아가기</button></p>
+  </>
+}
+
+function PrivacyPolicy({ navigate }) {
+  return <>
+    <PageHeader eyebrow="공개 데이터" title="개인정보처리방침" description="Yumocha는 지역의 구조환경지표와 계획예산을 다루는 데이터 공개 프로젝트입니다."/>
+    <section className="content-section">
+      <div className="prose">
+        <h3>수집하는 개인정보</h3>
+        <p>본 사이트는 회원가입, 로그인, 문의 양식, 댓글 등 이용자로부터 개인정보를 직접 입력받는 기능을 제공하지 않습니다. 따라서 이름, 이메일, 전화번호 등 개인을 식별할 수 있는 정보를 수집하지 않습니다.</p>
+        <h3>방문 기록 및 쿠키</h3>
+        <p>본 사이트는 별도의 방문자 분석(애널리틱스) 스크립트나 광고 목적의 쿠키를 사용하지 않습니다. 정적 파일을 호스팅하는 배포 플랫폼(Vercel) 자체의 서버 접속 로그가 통상적인 수준으로 생성될 수 있으나, 이는 본 사이트가 직접 수집·처리하지 않습니다.</p>
+        <h3>외부 링크</h3>
+        <p>본 사이트의 다운로드·출처 페이지에는 원자료를 제공한 외부 기관의 웹사이트로 연결되는 링크가 포함될 수 있습니다. 이동한 외부 사이트에서의 개인정보 처리는 해당 사이트의 정책을 따릅니다.</p>
+        <h3>문의</h3>
+        <p>본 방침에 대한 문의는 <a href="https://github.com/JungYeoni/yumocha-web/issues" target="_blank" rel="noreferrer">GitHub 이슈</a>를 통해 남겨주십시오.</p>
+        <h3>변경 이력</h3>
+        <p>이 방침이 변경될 경우 이 문서를 통해 변경 사항을 반영합니다. 최종 수정일: 2026-07-27</p>
+      </div>
+    </section>
+    <p className="back-link"><button className="text-button" onClick={()=>navigate('about')}>← 홈으로 돌아가기</button></p>
+  </>
+}
+
+function Checksums({ navigate }) {
+  return <>
+    <PageHeader eyebrow="공개 데이터" title="체크섬" description="공개 파일의 무결성을 확인할 수 있는 SHA-256 체크섬입니다."><a className="primary" href="/SHA256SUMS.txt" download>SHA256SUMS.txt 다운로드 <span>↓</span></a></PageHeader>
+    <Notice>현재 공개된 4개 파일의 SHA-256 체크섬이 <code>SHA256SUMS.txt</code>에 기록되어 있습니다. 남은 파일은 공개되는 대로 추가됩니다.</Notice>
+    <section className="checksum-list">
+      {files.filter(x=>x.status==='다운로드').map(x=><article key={x.file}><strong>{x.file}</strong><code>{checksums[x.file]}</code></article>)}
+    </section>
+    <p className="back-link"><button className="text-button" onClick={()=>navigate('download')}>← 데이터 다운로드로 돌아가기</button></p>
+  </>
+}
+
+function Sources({ navigate }) {
+  const groups = [...new Set(sources.map(x => x.group))]
+  return <>
+    <PageHeader eyebrow="공개 데이터" title="원출처 목록" description={`이 프로젝트가 사용한 지표 ${sources.length}개의 공식 통계표·원자료 출처입니다. 링크는 원문 조회용이며, 원자료 자체를 재배포하지 않습니다.`}>
+      <a className="primary" href="/SOURCES.csv" download>CSV로 다운로드 <span>↓</span></a>
+    </PageHeader>
+    <Notice>출처 링크는 팀이 자료 수집 시점(2026년 7월)에 확인한 주소입니다. 통계표 URL은 제공기관 개편으로 바뀔 수 있어, 접속이 안 되면 통계표명으로 다시 검색해 주세요.</Notice>
+    {groups.map(group => <section className="source-group" key={group}>
+      <h3>{group}</h3>
+      <div className="source-list">
+        {sources.filter(x => x.group === group).map(x => <article className="source-row" key={x.name}>
+          <div><strong>{x.name}</strong><span className="muted">{x.provider}</span></div>
+          <span className="muted">{x.period}</span>
+          <a href={x.url} target="_blank" rel="noreferrer">원문 보기 ↗</a>
+        </article>)}
+      </div>
+    </section>)}
+    <p className="back-link"><button className="text-button" onClick={()=>navigate('download')}>← 데이터 다운로드로 돌아가기</button></p>
   </>
 }
 
@@ -135,7 +219,7 @@ export default function App() {
   useEffect(() => { const onHash=()=>{setPage(getPage());setMenu(false);scrollTo(0,0)}; addEventListener('hashchange',onHash); return()=>removeEventListener('hashchange',onHash)},[])
   useEffect(() => { document.documentElement.setAttribute('data-theme', theme); localStorage.setItem('yumocha-theme', theme) }, [theme])
   const navigate = id => { location.hash = id }
-  const Current = { about: About, trends: Trends, structure: Structure, results: Results, download: Download }[page] || About
+  const Current = { about: About, trends: Trends, structure: Structure, results: Results, download: Download, sources: Sources, license: DataLicense, 'content-license': ContentLicense, privacy: PrivacyPolicy, checksums: Checksums }[page] || About
   return <ThemeContext.Provider value={theme}><div className="site-shell">
     <a href="#main-content" className="skip-link">본문 바로가기</a>
     <header className="topbar"><button className="brand" onClick={()=>navigate('about')} aria-label="Yumocha 홈"><span><img src="/logo.png" alt="" /></span><strong>Yumocha</strong></button>
@@ -162,14 +246,14 @@ export default function App() {
         <div className="footer-col">
           <h3>관련 사이트</h3>
           <a href="https://github.com/JungYeoni/yumocha" target="_blank" rel="noreferrer">분석 저장소 ↗</a>
-          <a href="/SOURCES.csv">원출처 목록</a>
+          <button onClick={()=>navigate('sources')}>원출처 목록</button>
         </div>
       </div>
       <div className="footer-policy">
-        <a href="/PRIVACY_POLICY.md"><strong>개인정보처리방침</strong></a>
-        <a href="/DATA_LICENSE.md">데이터 이용조건</a>
-        <a href="/CONTENT_LICENSE.md">콘텐츠 이용조건</a>
-        <a href="/SHA256SUMS.txt">체크섬</a>
+        <button onClick={()=>navigate('privacy')}><strong>개인정보처리방침</strong></button>
+        <button onClick={()=>navigate('license')}>데이터 이용조건</button>
+        <button onClick={()=>navigate('content-license')}>콘텐츠 이용조건</button>
+        <button onClick={()=>navigate('checksums')}>체크섬</button>
       </div>
       <div className="footer-bottom">
         <p>© 2026 Yumocha · 코드 MIT · 자체 콘텐츠 CC BY 4.0</p>
