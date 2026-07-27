@@ -97,5 +97,5 @@ export const sources = [
   { group: "사회·제도", name: "출산에 대한 인식", provider: "KOSIS(통계청 국가통계포털)", period: "2016-2024", url: "http://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1SSFA056R&tmprScrId=20260715194805121_4ef2430a1f714ed8" },
   { group: "사회·제도", name: "가사분담에 대한 성평등 인식", provider: "KOSIS(통계청 국가통계포털)", period: "2016-2024", url: "http://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1SSFA112R&tmprScrId=20260715194955138_1fefe54110914dfa" },
   { group: "사회·제도", name: "사회경제적 지위에 대한 인식", provider: "마이크로데이터 통합서비스(MDIS)", period: "2015, 2020, 2023", url: "https://mdis.mods.go.kr/ofrData/selectOrgOfrData.do?curMenuNo=UI_POR_P9220" },
-  { group: "분석 대상 변수", name: "합계출산율", provider: "KOSIS(통계청 국가통계포털)", period: "2016-2024", url: "https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1B81A21" },
+  { group: "출생지표", name: "합계출산율", provider: "KOSIS(통계청 국가통계포털)", period: "2016-2024", url: "https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1B81A21" },
 ]
