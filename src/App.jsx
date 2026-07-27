@@ -122,7 +122,7 @@ function Download({ navigate }) {
     <section className="download-list">
       <div className="download-head"><span>파일</span><span>행 수</span><span>크기</span><span>상태</span></div>
       {files.map(x=>{
-        const ready = x.status === '다운로드'
+        const ready = x.status === '공개'
         const Row = ready ? 'a' : 'article'
         return <Row key={x.file} className={ready?'downloadable':''} {...(ready?{href:`/${x.file}`,download:true}:{})}><div><span className="file-icon">↓</span><div><strong>{x.name}</strong><code>{x.file}</code><p>{x.description}</p></div></div><span>{x.rows}</span><span>{x.size}</span><span className={ready?'file-status ready':'file-status'}>{x.status}</span></Row>
       })}
@@ -184,7 +184,7 @@ function Checksums({ navigate }) {
     <PageHeader eyebrow="공개 데이터" title="체크섬" description="공개 파일의 무결성을 확인할 수 있는 SHA-256 체크섬입니다."><a className="primary" href="/SHA256SUMS.txt" download>SHA256SUMS.txt 다운로드 <span>↓</span></a></PageHeader>
     <Notice>현재 공개된 4개 파일의 SHA-256 체크섬이 <code>SHA256SUMS.txt</code>에 기록되어 있습니다. 남은 파일은 공개되는 대로 추가됩니다.</Notice>
     <section className="checksum-list">
-      {files.filter(x=>x.status==='다운로드').map(x=><article key={x.file}><strong>{x.file}</strong><code>{checksums[x.file]}</code></article>)}
+      {files.filter(x=>x.status==='공개').map(x=><article key={x.file}><strong>{x.file}</strong><code>{checksums[x.file]}</code></article>)}
     </section>
     <p className="back-link"><button className="text-button" onClick={()=>navigate('download')}>← 데이터 다운로드로 돌아가기</button></p>
   </>

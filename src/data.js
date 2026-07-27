@@ -26,10 +26,10 @@ export const budgetRows = regions.map((region, i) => ({
 }))
 
 export const files = [
-  { name: '분석 패널 CSV', file: 'analysis_panel.csv', description: '지역·연도 단위 재정반응성 기초분석 패널(시차 변수 포함)', rows: '153행', size: '12.6KB', status: '다운로드' },
-  { name: '계획예산 집계본', file: 'regional_budget_summary.csv', description: '당해예산 기준 지역·연도 집계 및 합계출산율', rows: '153행', size: '8.8KB', status: '다운로드' },
-  { name: '품질 플래그', file: 'quality_flags.csv', description: '기초패널 QA 요약(검증 항목별 집계값)', rows: '9행', size: '240B', status: '다운로드' },
-  { name: '전국 합계출산율 추세', file: 'national_fertility_trend.csv', description: '연도별 전국 합계출산율(통계청 공표값)', rows: '9행', size: '125B', status: '다운로드' },
+  { name: '분석 패널 CSV', file: 'analysis_panel.csv', description: '지역·연도 단위 재정반응성 기초분석 패널(시차 변수 포함)', rows: '153행', size: '12.6KB', status: '공개' },
+  { name: '계획예산 집계본', file: 'regional_budget_summary.csv', description: '당해예산 기준 지역·연도 집계 및 합계출산율', rows: '153행', size: '8.8KB', status: '공개' },
+  { name: '품질 플래그', file: 'quality_flags.csv', description: '기초패널 QA 요약(검증 항목별 집계값)', rows: '9행', size: '240B', status: '공개' },
+  { name: '전국 합계출산율 추세', file: 'national_fertility_trend.csv', description: '연도별 전국 합계출산율(통계청 공표값)', rows: '9행', size: '125B', status: '공개' },
   { name: '구조환경지표 검증본', file: 'structural_indicators.csv', description: '21개 지표와 품질 상태', rows: '연결 대기', size: '—', status: '준비 중' },
   { name: '데이터 사전', file: 'DATA_DICTIONARY.xlsx', description: '컬럼 정의와 단위·출처', rows: '—', size: '—', status: '준비 중' },
 ]
