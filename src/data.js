@@ -21,6 +21,9 @@ export const realFertility = {
   경남: [1.358, 1.227, 1.122, 1.046, 0.945, 0.903, 0.838, 0.799, 0.82],
   제주: [1.432, 1.305, 1.22, 1.145, 1.021, 0.951, 0.919, 0.827, 0.826],
 }
+// 통계청 공표 실측치 (national_fertility_trend.csv, 2016-2024)
+export const nationalFertility = [1.172, 1.052, 0.977, 0.918, 0.837, 0.808, 0.778, 0.721, 0.748]
+
 export const trendRows = regions.flatMap((region, r) => years.map((year, i) => ({
   region, year,
   fertility: realFertility[region][i],

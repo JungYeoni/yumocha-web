@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Chart, Metric, Notice, PageHeader, plotLayout } from './components'
-import { budgetRows, checksums, files, indicators, qaDetailRows, qaRows, regions, sources, trendRows, years } from './data'
+import { budgetRows, checksums, files, indicators, nationalFertility, qaDetailRows, qaRows, regions, sources, trendRows, years } from './data'
 import { ThemeContext, useTheme, themeColors } from './theme'
 
 const pages = [
@@ -53,15 +53,18 @@ function Trends() {
   const [region, setRegion] = useState('서울')
   const [indicator, setIndicator] = useState('fertility')
   const meta = indicators.find(x => x.value === indicator)
-  const selected = trendRows.filter(x => x.region === region)
+  const isReal = indicator === 'fertility'
+  useEffect(() => { if (!isReal && region === '전국') setRegion('서울') }, [isReal, region])
+  const selected = region === '전국'
+    ? years.map((year, i) => ({ region: '전국', year, fertility: nationalFertility[i], quality: '검증 완료' }))
+    : trendRows.filter(x => x.region === region)
   const last = selected.at(-1)
   const first = selected[0]
   const c = themeColors[useTheme()]
-  const isReal = indicator === 'fertility'
   return <>
     <PageHeader eyebrow="추세" title="지표 추이" description="지역의 시간적 변화와 17개 시도의 상대적 위치를 함께 살펴보세요."/>
     <div className="filter-bar">
-      <label>지역<select value={region} onChange={e => setRegion(e.target.value)}>{regions.map(x => <option key={x}>{x}</option>)}</select></label>
+      <label>지역<select value={region} onChange={e => setRegion(e.target.value)}>{isReal && <option>전국</option>}{regions.map(x => <option key={x}>{x}</option>)}</select></label>
       <label>지표<select value={indicator} onChange={e => setIndicator(e.target.value)}>{indicators.map(x => <option value={x.value} key={x.value}>{x.label}</option>)}</select></label>
       <div className="legend"><span className="dot plan3"/>제3차 기본계획<span className="dot plan4"/>제4차 기본계획</div>
     </div>
