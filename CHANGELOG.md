@@ -4,6 +4,7 @@
 
 ### 문서
 
+- CHANGELOG 자동 업데이트 [skip ci] ([d50acba](https://github.com/JungYeoni/yumocha-web/commit/d50acbabd1aa4bea7953bbabbff8ca5a3a0022a3))
 - CHANGELOG 자동 업데이트 [skip ci] ([e35fa11](https://github.com/JungYeoni/yumocha-web/commit/e35fa11bea9dd634f932596c2336cfd42af06bbb))
 - CHANGELOG 자동 업데이트 [skip ci] ([bca7849](https://github.com/JungYeoni/yumocha-web/commit/bca7849e0e044fe80446919359ac17f99f5c6b6b))
 - CHANGELOG 자동 업데이트 [skip ci] ([e94d5d2](https://github.com/JungYeoni/yumocha-web/commit/e94d5d265f6281f7cfccb105acb3eab99a1ea050))
