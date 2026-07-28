@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Chart, Metric, Notice, PageHeader, plotLayout } from './components'
-import { budgetByYear, budgetRows, checksums, cpi, files, indicators, nationalFertility, officialCategory2024, officialCategoryLabels2024, qaDetailRows, qaRows, regions, sources, trendRows, years } from './data'
+import { budgetByYear, budgetRows, checksums, cpi, files, indicators, nationalFertility, officialCategory2024, officialCategoryLabels2024, qaDetailRows, qaRows, regions, sources, structuralIndicators, trendRows, years } from './data'
 import { ThemeContext, useTheme, themeColors } from './theme'
 
 const pages = [
@@ -53,39 +53,41 @@ function Trends() {
   const [region, setRegion] = useState('서울')
   const [indicator, setIndicator] = useState('fertility')
   const meta = indicators.find(x => x.value === indicator)
-  const isReal = indicator === 'fertility'
-  useEffect(() => { if (!isReal && region === '전국') setRegion('서울') }, [isReal, region])
-  const selected = region === '전국'
-    ? years.map((year, i) => ({ region: '전국', year, fertility: nationalFertility[i], quality: '검증 완료' }))
-    : trendRows.filter(x => x.region === region)
-  const last = selected.at(-1)
-  const first = selected[0]
   const c = themeColors[useTheme()]
+  const nationalSeries = indicator === 'fertility' ? nationalFertility : (structuralIndicators[indicator]?.['전국'] ?? Array(9).fill(null))
+  useEffect(() => { if (region === '전국' && nationalSeries.every(v => v == null)) setRegion('서울') }, [region, nationalSeries])
+  const selected = region === '전국'
+    ? years.map((year, i) => ({ region: '전국', year, [indicator]: nationalSeries[i] }))
+    : trendRows.filter(x => x.region === region)
+  const available = selected.filter(x => x[indicator] != null)
+  const last = available.at(-1) ?? selected.at(-1)
+  const first = available[0] ?? selected[0]
+  const compareYear = [...years].reverse().find(y => trendRows.some(x => x.year === y && x[indicator] != null)) ?? years.at(-1)
   return <>
     <PageHeader eyebrow="추세" title="지표 추이" description="지역의 시간적 변화와 17개 시도의 상대적 위치를 함께 살펴보세요."/>
     <div className="filter-bar">
-      <label>지역<select value={region} onChange={e => setRegion(e.target.value)}>{isReal && <option>전국</option>}{regions.map(x => <option key={x}>{x}</option>)}</select></label>
+      <label>지역<select value={region} onChange={e => setRegion(e.target.value)}><option>전국</option>{regions.map(x => <option key={x}>{x}</option>)}</select></label>
       <label>지표<select value={indicator} onChange={e => setIndicator(e.target.value)}>{indicators.map(x => <option value={x.value} key={x.value}>{x.label}</option>)}</select></label>
       <div className="legend"><span className="dot plan3"/>제3차 기본계획<span className="dot plan4"/>제4차 기본계획</div>
     </div>
     <Notice>저출산·고령사회 기본계획은 5년 단위로 개편됩니다. 2016~2020년 제3차 계획은 출산율을 끌어올리는 데 목표를 두고 신혼부부, 난임부부 등 특정 대상 지원에 집중했습니다. 2021년부터 시작된 제4차 계획은 출산율 목표치를 없애고 모든 가족과 개인의 삶의 질을 높이는 쪽으로 정책 목표를 바꿨고, 지원 대상도 1인가구와 한부모가족 등 다양한 가족형태로 넓어졌습니다.</Notice>
     <div className="dashboard-grid">
       <section className="panel chart-panel wide">
-        <div className="panel-head"><div><p className="eyebrow">{region} · 2016–2024</p><h2>{meta.label} 추세</h2></div><div className="value-chip"><strong>{last[indicator]}</strong> {meta.unit}<small>{last.year} {isReal ? '통계청 공표값' : '구조 검증용 샘플'}</small></div></div>
+        <div className="panel-head"><div><p className="eyebrow">{region} · 2016–2024</p><h2>{meta.label} 추세</h2></div><div className="value-chip"><strong>{last[indicator]}</strong> {meta.unit}<small>{last.year} 원자료 검증 완료</small></div></div>
         <Chart ariaLabel={`${region} ${meta.label} 연도별 추세`} data={[{
           x: years, y: selected.map(x => x[indicator]), type: 'scatter', mode: 'lines+markers',
-          line: { color: c.accent, width: 3 }, marker: { color: selected.map(x => x.quality === '검증 완료' ? c.accent : '#fff'), line: {color:c.accent, width:2}, size: 8 },
+          line: { color: c.accent, width: 3 }, marker: { color: c.accent, size: 8 }, connectgaps: false,
           hovertemplate: `%{x}년<br>%{y} ${meta.unit}<extra>${region}</extra>`,
         }]} layout={{ height: 350, shapes: [{type:'rect', x0:2015.5, x1:2020.5, y0:0, y1:1, yref:'paper', fillcolor:c.zoneA, line:{width:0}, layer:'below'}, {type:'rect', x0:2020.5, x1:2024.5, y0:0, y1:1, yref:'paper', fillcolor:c.zoneB, line:{width:0}, layer:'below'}], xaxis:{dtick:1, fixedrange:true}, yaxis:{ticksuffix: meta.unit === '%' ? '%' : '', fixedrange:true, rangemode:'tozero'}, showlegend:false }}/>
       </section>
-      <aside className="panel insight-panel"><p className="eyebrow eyebrow-kr">변화</p><strong className="big-change">{(last[indicator] - first[indicator]).toFixed(meta.unit === '%' ? 1 : 2)}<small>{meta.unit}</small></strong><p>2016년 대비 2024년 변화</p><hr/><p className="muted">{meta.description}</p><div className="quality-key"><span>●</span> 검증 완료 <span className="hollow">●</span> 확인 필요</div></aside>
-      <section className="panel chart-panel wide"><div className="panel-head"><div><p className="eyebrow eyebrow-kr">17개 시도 · 2024</p><h2>시도 비교</h2></div></div>
-        <Chart ariaLabel={`17개 시도 ${meta.label} 비교`} data={[{type:'bar', x: regions, y: regions.map(r => trendRows.find(x => x.region === r && x.year === 2024)[indicator]), marker:{color:regions.map(r => r === region ? c.accent : c.mutedBar)}, hovertemplate:`%{x}<br>%{y} ${meta.unit}<extra></extra>`}]} layout={{height:310, xaxis:{tickangle:-35, fixedrange:true}, yaxis:{rangemode:'tozero', fixedrange:true}, showlegend:false}}/>
+      <aside className="panel insight-panel"><p className="eyebrow eyebrow-kr">변화</p><strong className="big-change">{(last[indicator] - first[indicator]).toFixed(meta.unit === '%' ? 1 : 2)}<small>{meta.unit}</small></strong><p>{first.year}년 대비 {last.year}년 변화</p><hr/><p className="muted">{meta.description}</p></aside>
+      <section className="panel chart-panel wide"><div className="panel-head"><div><p className="eyebrow eyebrow-kr">17개 시도 · {compareYear}</p><h2>시도 비교</h2></div></div>
+        <Chart ariaLabel={`17개 시도 ${meta.label} 비교`} data={[{type:'bar', x: regions, y: regions.map(r => trendRows.find(x => x.region === r && x.year === compareYear)?.[indicator] ?? null), marker:{color:regions.map(r => r === region ? c.accent : c.mutedBar)}, hovertemplate:`%{x}<br>%{y} ${meta.unit}<extra></extra>`}]} layout={{height:310, xaxis:{tickangle:-35, fixedrange:true}, yaxis:{rangemode:'tozero', fixedrange:true}, showlegend:false}}/>
       </section>
     </div>
-    {isReal
-      ? <Notice>합계출산율은 통계청이 공표한 지역·연도별 실측치입니다. 나머지 두 지표(청년고용률, 보육시설 보급률)는 21개 구조환경지표 정제본 공개 전까지 <strong>UI 구조 검증용 합성 샘플</strong>로 표시됩니다.</Notice>
-      : <Notice type="warn">현재 선택한 지표의 수치는 <strong>UI 구조 검증용 합성 샘플</strong>입니다. 검증 완료 데이터 연결 전에는 연구 결과로 인용할 수 없습니다. 결측값은 0으로 대체하거나 선으로 잇지 않습니다.</Notice>}
+    {meta.caveat
+      ? <Notice type="warn">{meta.caveat}</Notice>
+      : <Notice>21개 구조환경지표는 원자료를 직접 재현해 재정팀 산출값과 전수 대조한 뒤 공개합니다. 격년·비정기 조사 지표는 결측값을 0으로 대체하거나 선으로 잇지 않고 그대로 비워 둡니다.</Notice>}
   </>
 }
 
