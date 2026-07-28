@@ -146,7 +146,7 @@ function Quality() {
       <Chart ariaLabel="지역과 연도별 예산결측 비율 히트맵" data={[{ type:'heatmap', z, x: years, y: regions, colorscale: [[0, c.zoneA],[1, c.accent]], hoverongaps:false, hovertemplate:'%{y} %{x}<br>결측비율 %{z}%<extra></extra>', colorbar:{ title:'%', thickness:14 } }]} layout={{ height:520, xaxis:{ type:'category', fixedrange:true }, yaxis:{ fixedrange:true, autorange:'reversed' } }}/>
     </section>
     <aside className="panel reading-guide qa-guide"><p className="eyebrow eyebrow-kr">방법</p><h2>어떻게 검증했나요?</h2><ol><li><strong>세부사업 결측</strong>: 시행계획 원문에 세부사업 항목은 있지만 예산금액 칸이 비어 있으면 결측으로 표시합니다.</li><li><strong>중분류 소계 검증</strong>: 시행계획 원문에 적힌 중분류별 소계값(원문)과, 그 아래 딸린 세부사업 예산을 모두 더한 값(집계)을 비교합니다.</li><li><strong>판정 기준</strong>: 두 값의 오차율이 허용기준 이내면 일치, 벗어나면 불일치, 원문에 소계값 자체가 없으면 판정불가로 표시합니다.</li><li><strong>불일치의 의미</strong>: 소계와 세부사업 합계가 다르다는 뜻일 뿐, 어느 쪽이 맞는지는 판단하지 않습니다. 원문 기재 오류일 수도, 저희가 세부사업을 일부 놓쳤을 수도 있어 임의로 보정하지 않고 그대로 둡니다. 해당 지역·연도의 예산 총액은 이 점을 감안해 참고하십시오.</li></ol></aside>
-    {flagged.length>0 && <section className="limitations"><div><p className="eyebrow eyebrow-kr">주의</p><h2>원자료 누락<br/>주의 지역·연도</h2></div><ul>{flagged.map(r=><li key={`${r.region}-${r.year}`}><strong>{r.region} {r.year}년:</strong> {r.note}</li>)}</ul></section>}
+    {flagged.length>0 && <div className="notice warn qa-flagged"><span aria-hidden="true">!</span><div><strong>원자료 누락 주의 지역·연도</strong><ul>{flagged.map(r=><li key={`${r.region}-${r.year}`}><strong>{r.region} {r.year}년:</strong> {r.note}</li>)}</ul></div></div>}
     <div className="filter-bar qa-detail-filter">
       <label>지역<select value={region} onChange={e => setRegion(e.target.value)}>{regions.map(x => <option key={x}>{x}</option>)}</select></label>
     </div>
