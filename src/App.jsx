@@ -83,6 +83,7 @@ function Trends() {
       <div className="legend"><span className="dot plan3"/>제3차 기본계획<span className="dot plan4"/>제4차 기본계획</div>
     </div>
     <Notice>저출산·고령사회 기본계획은 5년 단위로 개편됩니다. 2016~2020년 제3차 계획은 출산율을 끌어올리는 데 목표를 두고 신혼부부, 난임부부 등 특정 대상 지원에 집중했습니다. 2021년부터 시작된 제4차 계획은 출산율 목표치를 없애고 모든 가족과 개인의 삶의 질을 높이는 쪽으로 정책 목표를 바꿨고, 지원 대상도 1인가구와 한부모가족 등 다양한 가족형태로 넓어졌습니다.</Notice>
+    <p className="sr-only" aria-live="assertive">{region} {meta.label} 차트로 업데이트됨. 최신값 {last[indicator]}{meta.unit}({last.year}년)</p>
     <div className="dashboard-grid">
       <section className="panel chart-panel wide">
         <div className="panel-head"><div><p className="eyebrow">{region} · 2016–2024</p><h2>{meta.label} 추세</h2></div><div className="value-chip"><strong>{last[indicator]}</strong> {meta.unit}<small>{last.year} 원자료 검증 완료</small></div></div>
@@ -129,6 +130,7 @@ function Structure() {
     <div className="filter-bar chart-filter">
       <label>지역<select value={trendRegion} onChange={e => setTrendRegion(e.target.value)}>{regions.map(x => <option key={x}>{x}</option>)}</select></label>
     </div>
+    <p className="sr-only" aria-live="assertive">{trendRegion} 계획예산 추이 차트로 업데이트됨</p>
     <section className="panel chart-panel">
       <div className="panel-head"><div><p className="eyebrow eyebrow-kr">연도별 추이</p><h2>{trendRegion} 계획예산 추이</h2></div><p className="muted">단위: 억 원 · 실질은 2020년 불변가격 환산(통계청 소비자물가지수) · 실제 집계값</p></div>
       <Chart ariaLabel={`${trendRegion} 계획예산 명목·실질 추이`} data={[
@@ -139,8 +141,8 @@ function Structure() {
     <section className="panel chart-panel">
       <div className="panel-head"><div><p className="eyebrow eyebrow-kr">정책영역 구성</p><h2>정책영역별 예산 구성</h2></div><p className="muted">{budgetView==='official' ? '2024년 · 저출산·고령사회 기본계획(제4차) 공식 분류 · 실제 집계값' : '구조 검증용 샘플'}</p></div>
       <div className="chart-toggle">
-        <button className={budgetView==='domain'?'active':''} onClick={()=>setBudgetView('domain')}>출생환경지표 영역 기준</button>
-        <button className={budgetView==='official'?'active':''} onClick={()=>setBudgetView('official')}>기본계획 공식 분류기준</button>
+        <button className={budgetView==='domain'?'active':''} aria-pressed={budgetView==='domain'} onClick={()=>setBudgetView('domain')}>출생환경지표 영역 기준</button>
+        <button className={budgetView==='official'?'active':''} aria-pressed={budgetView==='official'} onClick={()=>setBudgetView('official')}>기본계획 공식 분류기준</button>
       </div>
       <Chart ariaLabel="지역별 정책영역 예산 구성 차트" data={budgetView==='domain' ? domainData : officialData} layout={{height:360,barmode:'stack',xaxis:{tickangle:-35,fixedrange:true},yaxis:{ticksuffix:'%',range:[0,100],fixedrange:true},legend:{orientation:'h',y:1.15,x:0}}}/>
     </section>
@@ -192,6 +194,7 @@ function Quality() {
     <div className="filter-bar qa-detail-filter">
       <label>지역<select value={region} onChange={e => setRegion(e.target.value)}>{regions.map(x => <option key={x}>{x}</option>)}</select></label>
     </div>
+    <p className="sr-only" aria-live="assertive">{region} 연도별 중분류 소계 검증 내역으로 업데이트됨</p>
     <section className="panel qa-detail">
       <div className="panel-head"><div><p className="eyebrow eyebrow-kr">{region}</p><h2>연도별 중분류 소계 검증 내역</h2></div><p className="muted">중분류 소계(원문) ↔ 세부사업 합계(집계) 비교 · 단위: 백만 원</p></div>
       {years.map(year => {
