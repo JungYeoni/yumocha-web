@@ -215,7 +215,7 @@ function Sources({ navigate }) {
       <h3>{group}</h3>
       <div className="source-list">
         {sources.filter(x => x.group === group).map(x => <article className="source-row" key={x.name}>
-          <div><strong>{x.name}</strong><span className="muted">{x.provider}</span></div>
+          <div><strong>{x.name}</strong><span className="muted">{x.provider}</span>{x.note && <span className="muted source-note">{x.note}</span>}</div>
           <span className="muted">{x.period}</span>
           <a href={x.url} target="_blank" rel="noreferrer">원문 보기 ↗</a>
         </article>)}

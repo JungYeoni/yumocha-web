@@ -63,10 +63,10 @@ export const checksums = {
 
 export const sources = [
   { group: "경제·고용·주거", name: "청년 고용률", provider: "KOSIS(통계청 국가통계포털)", period: "2016-2024", url: "https://kosis.kr/statHtml/statHtml.do?conn_path=I2&orgId=101&tblId=DT_1B04006" },
-  { group: "경제·고용·주거", name: "청년층 정규직 근로자 비율", provider: "마이크로데이터 통합서비스(MDIS)", period: "2016-2024", url: "https://mdis.mods.go.kr/ofrData/selectOrgOfrData.do?curMenuNo=UI_POR_P9220" },
-  { group: "경제·고용·주거", name: "주택가격", provider: "마이크로데이터 통합서비스(MDIS)", period: "2016-2024", url: "https://mdis.mods.go.kr/ofrData/selectOrgOfrData.do?curMenuNo=UI_POR_P9220" },
-  { group: "경제·고용·주거", name: "자가점유비율", provider: "마이크로데이터 통합서비스(MDIS)", period: "2016-2024", url: "https://mdis.mods.go.kr/ofrData/selectOrgOfrData.do?curMenuNo=UI_POR_P9220" },
-  { group: "경제·고용·주거", name: "주거비", provider: "마이크로데이터 통합서비스(MDIS)", period: "2016-2024", url: "https://mdis.mods.go.kr/ofrData/selectOrgOfrData.do?curMenuNo=UI_POR_P9220" },
+  { group: "경제·고용·주거", name: "청년층 정규직 근로자 비율", provider: "마이크로데이터 통합서비스(MDIS) · 지역별고용조사", period: "2016-2024년 상·하반기", note: "C형 자료 사용, 20~39세 임금근로자 대상", url: "https://mdis.mods.go.kr/ofrData/selectOrgOfrData.do?curMenuNo=UI_POR_P9220" },
+  { group: "경제·고용·주거", name: "주택가격", provider: "마이크로데이터 통합서비스(MDIS) · 주거실태조사", period: "2016-2024", note: "자가가구 현재 주택가격의 지역별 비가중 평균 · 비교자료로 한국부동산원 시도별 주택종합 중위매매가격 참고", url: "https://mdis.mods.go.kr/ofrData/selectOrgOfrData.do?curMenuNo=UI_POR_P9220" },
+  { group: "경제·고용·주거", name: "청년가구 자가점유비율", provider: "마이크로데이터 통합서비스(MDIS) · 주거실태조사", period: "2016-2024", note: "가구주 20~39세, 조사가중치 적용", url: "https://mdis.mods.go.kr/ofrData/selectOrgOfrData.do?curMenuNo=UI_POR_P9220" },
+  { group: "경제·고용·주거", name: "청년가구 월소득 대비 주택임대료 비율(RIR)", provider: "마이크로데이터 통합서비스(MDIS) · 주거실태조사", period: "2016-2024", note: "전월세전환율은 KOSIS 지역별 전월세전환율을 보조자료로 사용", url: "https://mdis.mods.go.kr/ofrData/selectOrgOfrData.do?curMenuNo=UI_POR_P9220" },
   { group: "경제·고용·주거", name: "소득 만족도", provider: "KOSIS(통계청 국가통계포털)", period: "2016-2024", url: "https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1SSIC050R&conn_path=I2" },
   { group: "경제·고용·주거", name: "소득 수준", provider: "KOSIS(통계청 국가통계포털)", period: "2016-2024", url: "http://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=INH_1C96_04&tmprScrId=20260721120610036_ceed1f44c26d41c3" },
   { group: "경제·고용·주거", name: "근로시간", provider: "KOSIS(통계청 국가통계포털)", period: "2016-2024", url: "https://kosis.kr/statHtml/statHtml.do?orgId=118&tblId=DT_118N_MON048&conn_path=I2" },
@@ -76,8 +76,8 @@ export const sources = [
   { group: "가족·생활", name: "문화기반시설 보급도", provider: "KOSIS(통계청 국가통계포털)", period: "2016-2024", url: "https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1YL20931" },
   { group: "가족·생활", name: "도시공원 보급도", provider: "KOSIS(통계청 국가통계포털)", period: "2016-2024", url: "http://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1YL21281&tmprScrId=20260715192137553_dbabe38d3c9b47a4" },
   { group: "가족·생활", name: "여가생활 만족도", provider: "KOSIS(통계청 국가통계포털)", period: "2016-2024", url: "http://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=INH_1SSCL091R&tmprScrId=20260715192258581_2e67f903b62d42df" },
-  { group: "가족·생활", name: "가사노동 공동 참여도", provider: "마이크로데이터 통합서비스(MDIS)", period: "2020, 2023", url: "https://mdis.mods.go.kr/ofrData/selectOrgOfrData.do?curMenuNo=UI_POR_P9220" },
-  { group: "가족·생활", name: "돌봄노동 공동 참여도", provider: "마이크로데이터 통합서비스(MDIS)", period: "2020, 2023", url: "https://mdis.mods.go.kr/ofrData/selectOrgOfrData.do?curMenuNo=UI_POR_P9220" },
+  { group: "가족·생활", name: "가사노동 공동 참여도", provider: "마이크로데이터 통합서비스(MDIS) · 가족실태조사", period: "2020, 2023", note: "부부가구 대상, 조사가중치 적용", url: "https://mdis.mods.go.kr/ofrData/selectOrgOfrData.do?curMenuNo=UI_POR_P9220" },
+  { group: "가족·생활", name: "돌봄노동 공동 참여도", provider: "마이크로데이터 통합서비스(MDIS) · 가족실태조사", period: "2020, 2023", note: "돌봄 대상 자녀가 있는 부부가구", url: "https://mdis.mods.go.kr/ofrData/selectOrgOfrData.do?curMenuNo=UI_POR_P9220" },
   { group: "보건·안전", name: "분만 가능 산부인과 보급도", provider: "건강보험심사평가원(HIRA) 보건의료빅데이터", period: "2016-2024", url: "https://opendata.hira.or.kr/" },
   { group: "보건·안전", name: "분만실 병상수 보급도", provider: "KOSIS(통계청 국가통계포털)", period: "2016-2024", url: "http://kosis.kr/statHtml/statHtml.do?orgId=354&tblId=DT_HIRA49_3&tmprScrId=20260716080206914_911e31072f104c33" },
   { group: "보건·안전", name: "난임시술기관 보급도", provider: "건강보험심사평가원(HIRA) 보건의료빅데이터", period: "2016-2024", url: "https://opendata.hira.or.kr/" },
@@ -96,6 +96,6 @@ export const sources = [
   { group: "사회·제도", name: "결혼에 대한 인식", provider: "KOSIS(통계청 국가통계포털)", period: "2016-2024", url: "http://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1SSFA060R&tmprScrId=20260715194650901_292f93e266614faf" },
   { group: "사회·제도", name: "출산에 대한 인식", provider: "KOSIS(통계청 국가통계포털)", period: "2016-2024", url: "http://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1SSFA056R&tmprScrId=20260715194805121_4ef2430a1f714ed8" },
   { group: "사회·제도", name: "가사분담에 대한 성평등 인식", provider: "KOSIS(통계청 국가통계포털)", period: "2016-2024", url: "http://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1SSFA112R&tmprScrId=20260715194955138_1fefe54110914dfa" },
-  { group: "사회·제도", name: "사회경제적 지위에 대한 인식", provider: "마이크로데이터 통합서비스(MDIS)", period: "2015, 2020, 2023", url: "https://mdis.mods.go.kr/ofrData/selectOrgOfrData.do?curMenuNo=UI_POR_P9220" },
+  { group: "사회·제도", name: "사회경제적 지위에 대한 인식", provider: "마이크로데이터 통합서비스(MDIS) · 가족실태조사", period: "2015, 2020, 2023", note: "유효 응답자의 조사가중평균", url: "https://mdis.mods.go.kr/ofrData/selectOrgOfrData.do?curMenuNo=UI_POR_P9220" },
   { group: "출생지표", name: "합계출산율", provider: "KOSIS(통계청 국가통계포털)", period: "2016-2024", url: "https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1B81A21" },
 ]
