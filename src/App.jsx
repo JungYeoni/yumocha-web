@@ -38,7 +38,19 @@ function About({ navigate }) {
     </section>
     <section className="content-section two-col">
       <div><p className="eyebrow eyebrow-kr">프로젝트 배경</p><h2>숫자 하나로는<br/>지역을 설명할 수 없으니까</h2></div>
-      <div className="prose"><p>출산율의 변화는 한 해의 예산만으로 설명되지 않습니다. 일자리, 주거, 돌봄 접근성, 인구구조처럼 오랜 시간 누적된 지역의 조건과 재정대응을 같은 화면에서 살펴봅니다.</p><p>Yumocha는 정책의 인과효과를 단정하지 않습니다. 재정대응 수준과 이후 변화 사이의 <strong>조건부·시차적 연관성</strong>을 탐색하고, 데이터의 빈틈과 해석의 한계도 함께 공개합니다.</p><p>공개된 지표 값을 그대로 옮기지 않고, 21개 구조환경지표를 원자료 기준으로 전수 재계산해 대조했습니다. 이 과정에서 산식이 다르게 적용된 사례 3건을 발견해 원자료 제공기관의 자료 수정으로 이어졌으며, 남은 지표도 결측·확인 필요 여부를 함께 표시합니다.</p><p>계획예산도 시행계획 원문과 세부사업 단위로 직접 대조합니다. 153개 지역·연도 전수 검증에서 예산금액이 비어 있는 세부사업 287건을 확인했고, 중분류 소계와 세부사업 합계가 어긋나는 항목도 임의로 보정하지 않고 그대로 공개합니다. 자세한 내역은 <button className="text-button-inline" onClick={()=>navigate('quality')}>예산 정합성 검증</button> 페이지에서 확인할 수 있습니다.</p></div>
+      <div className="prose">
+        <p>출산율의 변화는 한 해의 예산만으로 설명되지 않습니다. 일자리, 주거, 돌봄 접근성, 인구구조처럼 오랜 시간 누적된 지역의 조건과 재정대응을 같은 화면에서 살펴봅니다.</p>
+        <p>Yumocha는 정책의 <abbr title="원인과 결과를 밝히는 것이 아니라, 특정 조건에서 시차를 두고 함께 나타나는 경향을 뜻합니다.">인과효과를 단정하지 않고 조건부·시차적 연관성</abbr>을 탐색하며, 데이터의 빈틈과 해석의 한계도 함께 공개합니다.</p>
+        <div className="verify-stats">
+          <div><strong>21개</strong><span>구조환경지표 원자료 전수 재계산 · 확정 오류 3건</span></div>
+          <div><strong>153개</strong><span>지역·연도 계획예산 전수 검증 · 세부사업 결측 287건</span></div>
+        </div>
+        <details className="prose-detail">
+          <summary>검증 방법 자세히 보기</summary>
+          <p>21개 구조환경지표는 공개된 값을 그대로 옮기지 않고 원자료 기준으로 전수 재계산해 대조했습니다. 이 과정에서 산식이 다르게 적용된 사례 3건을 발견해 원자료 제공기관의 자료 수정으로 이어졌으며, 남은 지표도 결측·확인 필요 여부를 함께 표시합니다.</p>
+          <p>계획예산도 시행계획 원문과 세부사업 단위로 직접 대조합니다. 예산금액이 비어 있는 세부사업 287건을 확인했고, 중분류 소계와 세부사업 합계가 어긋나는 항목도 임의로 보정하지 않고 그대로 공개합니다. 자세한 내역은 <button className="text-button-inline" onClick={()=>navigate('quality')}>예산 정합성 검증</button> 페이지에서 확인할 수 있습니다.</p>
+        </details>
+      </div>
     </section>
     <section className="principles">
       <article><span>구조환경</span><h3>구조환경</h3><p>지역 주민의 선택을 둘러싼 인구·경제·생활 인프라 조건을 21개 지표로 살펴봅니다.</p></article>
