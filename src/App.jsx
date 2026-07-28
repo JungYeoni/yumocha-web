@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Chart, Metric, Notice, PageHeader, plotLayout } from './components'
-import { budgetRows, checksums, files, indicators, nationalFertility, officialCategory2024, officialCategoryLabels2024, qaDetailRows, qaRows, regions, sources, trendRows, years } from './data'
+import { budgetByYear, budgetRows, checksums, cpi, files, indicators, nationalFertility, officialCategory2024, officialCategoryLabels2024, qaDetailRows, qaRows, regions, sources, trendRows, years } from './data'
 import { ThemeContext, useTheme, themeColors } from './theme'
 
 const pages = [
@@ -93,6 +93,9 @@ function Structure() {
   const sorted = [...budgetRows].sort((a,b) => b.budget-a.budget)
   const c = themeColors[useTheme()]
   const [budgetView, setBudgetView] = useState('domain')
+  const [trendRegion, setTrendRegion] = useState(regions[0])
+  const nominalSeries = budgetByYear[trendRegion].map(v => +(v/100).toFixed(0))
+  const realSeries = budgetByYear[trendRegion].map((v,i) => +(v/100/(cpi[i]/100)).toFixed(0))
   const alphas = [1, .7, .45, .22]
   const domainData = [
     ['가족지원','family',1],['돌봄·교육','care',.7],['주거','housing',.45],['일·생활 균형','work',.22]
@@ -108,6 +111,16 @@ function Structure() {
     <section className="panel chart-panel">
       <div className="panel-head"><div><p className="eyebrow eyebrow-kr">계획예산</p><h2>지역별 계획예산 비교</h2></div><div className="panel-head-note"><p className="muted">단위: 억 원 · 구조 검증용 샘플</p><a className="text-button-inline" href="https://www.betterfuture.go.kr/front/policySpace/actionPlan.do" target="_blank" rel="noreferrer">시행계획 원문 보기 ↗</a></div></div>
       <Chart tall ariaLabel="지역별 계획예산 막대 차트" data={[{type:'bar', orientation:'h', y:sorted.map(x=>x.region).reverse(), x:sorted.map(x=>x.budget).reverse(), marker:{color:sorted.map((_,i)=>`rgba(${c.accentRgb}, ${.42 + i/40})`).reverse()}, hovertemplate:'%{y}<br>%{x:,.0f}억 원<extra></extra>'}]} layout={{height:500, margin:{...plotLayout.margin,l:45}, xaxis:{tickformat:',', fixedrange:true}, yaxis:{fixedrange:true}, showlegend:false}}/>
+    </section>
+    <div className="filter-bar chart-filter">
+      <label>지역<select value={trendRegion} onChange={e => setTrendRegion(e.target.value)}>{regions.map(x => <option key={x}>{x}</option>)}</select></label>
+    </div>
+    <section className="panel chart-panel">
+      <div className="panel-head"><div><p className="eyebrow eyebrow-kr">연도별 추이</p><h2>{trendRegion} 계획예산 추이</h2></div><p className="muted">단위: 억 원 · 실질은 2020년 불변가격 환산(통계청 소비자물가지수) · 실제 집계값</p></div>
+      <Chart ariaLabel={`${trendRegion} 계획예산 명목·실질 추이`} data={[
+        {x:years, y:nominalSeries, type:'scatter', mode:'lines+markers', name:'명목', line:{color:c.accent,width:3}, marker:{size:7,color:c.accent}, hovertemplate:'%{x}년<br>명목 %{y:,.0f}억 원<extra></extra>'},
+        {x:years, y:realSeries, type:'scatter', mode:'lines+markers', name:'실질(2020년 기준)', line:{color:c.line,width:2,dash:'dot'}, marker:{size:7,color:c.line}, hovertemplate:'%{x}년<br>실질 %{y:,.0f}억 원<extra></extra>'},
+      ]} layout={{height:360, xaxis:{dtick:1,fixedrange:true}, yaxis:{tickformat:',',fixedrange:true,rangemode:'tozero'}, legend:{orientation:'h',y:1.15,x:0}}}/>
     </section>
     <section className="panel chart-panel">
       <div className="panel-head"><div><p className="eyebrow eyebrow-kr">정책영역 구성</p><h2>정책영역별 예산 구성</h2></div><p className="muted">{budgetView==='official' ? '2024년 · 저출산·고령사회 기본계획(제4차) 공식 분류 · 실제 집계값' : '구조 검증용 샘플'}</p></div>
