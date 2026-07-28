@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react'
 import { Chart, Metric, Notice, PageHeader, plotLayout } from './components'
-import { budgetRows, checksums, files, indicators, regions, sources, trendRows, years } from './data'
+import { budgetRows, checksums, files, indicators, qaDetailRows, qaRows, regions, sources, trendRows, years } from './data'
 import { ThemeContext, useTheme, themeColors } from './theme'
 
 const pages = [
-  ['about', '프로젝트 소개'],
-  ['trends', '지역·연도 추세'],
-  ['structure', '구조환경·재정'],
-  ['results', '분석 결과'],
-  ['download', '데이터 다운로드'],
+  { id: 'about', label: '프로젝트 소개' },
+  { id: 'trends', label: '지표 추이' },
+  { id: 'structure', label: '재정 현황' },
+  { label: '분석 결과', children: [
+    { id: 'results', label: '재정반응성 분석' },
+    { id: 'quality', label: '예산 정합성 검증' },
+  ] },
+  { id: 'download', label: '데이터 다운로드' },
 ]
+const flatPages = pages.flatMap(p => p.children || [p])
 
 function About({ navigate }) {
   return <>
@@ -55,13 +59,13 @@ function Trends() {
   const c = themeColors[useTheme()]
   const isReal = indicator === 'fertility'
   return <>
-    <PageHeader eyebrow="추세" title="지역·연도 추세" description="지역의 시간적 변화와 17개 시도의 상대적 위치를 함께 살펴보세요."/>
+    <PageHeader eyebrow="추세" title="지표 추이" description="지역의 시간적 변화와 17개 시도의 상대적 위치를 함께 살펴보세요."/>
     <div className="filter-bar">
       <label>지역<select value={region} onChange={e => setRegion(e.target.value)}>{regions.map(x => <option key={x}>{x}</option>)}</select></label>
       <label>지표<select value={indicator} onChange={e => setIndicator(e.target.value)}>{indicators.map(x => <option value={x.value} key={x.value}>{x.label}</option>)}</select></label>
       <div className="legend"><span className="dot plan3"/>제3차 기본계획<span className="dot plan4"/>제4차 기본계획</div>
     </div>
-    <p className="muted legend-note">2021년 제4차 기본계획부터 정책 목표·대상 가족 개념 자체가 재편되었습니다 — 자세한 내용은 분석 결과 페이지 참고.</p>
+    <p className="muted legend-note">저출산·고령사회 기본계획은 5년 단위로 개편됩니다. 2016~2020년 제3차 계획은 출산율을 끌어올리는 데 목표를 두고 신혼부부, 난임부부 등 특정 대상 지원에 집중했습니다. 2021년부터 시작된 제4차 계획은 출산율 목표치를 없애고 모든 가족과 개인의 삶의 질을 높이는 쪽으로 정책 목표를 바꿨고, 지원 대상도 1인가구와 한부모가족 등 다양한 가족형태로 넓어졌습니다.</p>
     <div className="dashboard-grid">
       <section className="panel chart-panel wide">
         <div className="panel-head"><div><p className="eyebrow">{region} · 2016–2024</p><h2>{meta.label} 추세</h2></div><div className="value-chip"><strong>{last[indicator]}</strong> {meta.unit}<small>{last.year} {isReal ? '통계청 공표값' : '구조 검증용 샘플'}</small></div></div>
@@ -86,7 +90,7 @@ function Structure() {
   const sorted = [...budgetRows].sort((a,b) => b.budget-a.budget)
   const c = themeColors[useTheme()]
   return <>
-    <PageHeader eyebrow="현황" title="구조환경·재정 현황" description="지역의 구조적 여건과 계획예산의 규모·구성을 나란히 비교합니다."/>
+    <PageHeader eyebrow="현황" title="재정 현황" description="지역의 구조적 여건과 계획예산의 규모·구성을 나란히 비교합니다."/>
     <div className="metric-row"><Metric label="분석 지역" value="17" sub="전국 광역 시도"/><Metric label="구조환경지표" value="21" sub="원자료 검증 완료"/><Metric label="예산 기준" value="당해예산" sub="전년도예산 제외"/><Metric label="데이터 기간" value="9년" sub="2016–2024"/></div>
     <section className="panel chart-panel">
       <div className="panel-head"><div><p className="eyebrow eyebrow-kr">계획예산</p><h2>지역별 계획예산 비교</h2></div><div className="panel-head-note"><p className="muted">단위: 억 원 · 구조 검증용 샘플</p><a className="text-button-inline" href="https://www.betterfuture.go.kr/front/policySpace/actionPlan.do" target="_blank" rel="noreferrer">시행계획 원문 보기 ↗</a></div></div>
@@ -116,6 +120,52 @@ function Results() {
       <aside className="panel reading-guide"><p className="eyebrow eyebrow-kr">읽는 법</p><h2>어떻게 읽나요?</h2><ol><li><strong>점</strong>은 추정된 연관성의 방향과 크기를 나타냅니다.</li><li><strong>가로선</strong>은 95% 신뢰구간입니다.</li><li>신뢰구간이 0을 포함하면 통계적 불확실성이 큽니다.</li></ol></aside>
     </div>
     <section className="limitations"><div><p className="eyebrow eyebrow-kr">해석</p><h2>숫자보다 먼저<br/>확인할 것</h2></div><ul><li>관찰자료 분석은 미측정 교란과 역인과 가능성을 배제하지 못합니다.</li><li>계획예산은 실제 집행 시점·규모와 다를 수 있습니다.</li><li>지역별 정책 구성과 대상 집단의 차이를 계수 하나로 환원할 수 없습니다.</li><li>전국 공표값과 17개 시도의 단순평균은 구분해 표시합니다.</li><li>다년도로 관측치를 늘려도 같은 지역의 인접 연도 값은 서로 비슷해(자기상관), 분석의 실질 정보량은 지역 수 17개에 가깝습니다.</li><li>2021년 제4차 기본계획부터 정책 목표와 대상 가족 개념 자체가 재편(출산율 목표치 폐기, 삶의 질·성평등 중심으로 전환)되어, 제3차·제4차 기간의 "저출산 대응 예산"이 같은 기준으로 집계된 것이 아닐 수 있습니다.</li></ul></section>
+  </>
+}
+
+function Quality() {
+  const [region, setRegion] = useState(regions[0])
+  const c = themeColors[useTheme()]
+  const byKey = Object.fromEntries(qaRows.map(r => [`${r.region}-${r.year}`, r]))
+  const z = regions.map(r => years.map(year => +(byKey[`${r}-${year}`].missing / byKey[`${r}-${year}`].detail * 100).toFixed(1)))
+  const totalMissing = qaRows.reduce((s,r)=>s+r.missing, 0)
+  const totalDetail = qaRows.reduce((s,r)=>s+r.detail, 0)
+  const missingRows = qaRows.filter(r=>r.missing>0).length
+  const flagged = qaRows.filter(r=>r.note)
+  const resultClass = { 일치: 'ok', 불일치: 'mismatch', 판정불가: 'unknown' }
+  return <>
+    <PageHeader eyebrow="분석" title="예산 정합성 검증" description="계획예산 세부사업 중 예산금액이 비어 있는 항목의 비율과, 중분류 소계-세부사업 합계 검증 결과를 지역별로 살펴봅니다."><span className="status-pill">공개 데이터 기반</span></PageHeader>
+    <Notice>analysis_panel.csv·QA 검증결과에 포함된 실제 집계값입니다(가상값 아님). 결측 세부사업은 계획예산 합계에서 제외되므로, 결측이 많은 지역·연도는 실제보다 예산이 과소집계됐을 수 있습니다. 중분류명은 시행계획 원문의 목차 구조를 그대로 표기하며, 연도별로 명칭이 달라질 수 있습니다.</Notice>
+    <div className="metric-row">
+      <Metric label="결측 세부사업" value={`${totalMissing}건`} sub={`전체 ${totalDetail.toLocaleString()}건 중 ${(totalMissing/totalDetail*100).toFixed(1)}%`}/>
+      <Metric label="결측 발생 지역·연도" value={`${missingRows}개`} sub="전체 153개 지역·연도 중"/>
+      <Metric label="결측 최다 연도" value="2018년" sub="123건 · 전체 결측의 43%"/>
+    </div>
+    <section className="panel chart-panel wide">
+      <div className="panel-head"><div><p className="eyebrow eyebrow-kr">지역 × 연도</p><h2>세부사업 예산결측 비율</h2></div><p className="muted">단위: % (해당 지역·연도 세부사업수 대비)</p></div>
+      <Chart ariaLabel="지역과 연도별 예산결측 비율 히트맵" data={[{ type:'heatmap', z, x: years, y: regions, colorscale: [[0, c.zoneA],[1, c.accent]], hoverongaps:false, hovertemplate:'%{y} %{x}<br>결측비율 %{z}%<extra></extra>', colorbar:{ title:'%', thickness:14 } }]} layout={{ height:520, xaxis:{ type:'category', fixedrange:true }, yaxis:{ fixedrange:true, autorange:'reversed' } }}/>
+    </section>
+    {flagged.length>0 && <section className="limitations"><div><p className="eyebrow eyebrow-kr">주의</p><h2>원자료 누락<br/>주의 지역·연도</h2></div><ul>{flagged.map(r=><li key={`${r.region}-${r.year}`}><strong>{r.region} {r.year}년</strong> — {r.note}</li>)}</ul></section>}
+    <div className="filter-bar qa-detail-filter">
+      <label>지역<select value={region} onChange={e => setRegion(e.target.value)}>{regions.map(x => <option key={x}>{x}</option>)}</select></label>
+    </div>
+    <section className="panel qa-detail">
+      <div className="panel-head"><div><p className="eyebrow eyebrow-kr">{region}</p><h2>연도별 중분류 소계 검증 내역</h2></div><p className="muted">중분류 소계(원문) ↔ 세부사업 합계(집계) 비교 · 단위: 백만 원</p></div>
+      {years.map(year => {
+        const rows = qaDetailRows.filter(r => r.region === region && r.year === year)
+        if (!rows.length) return null
+        return <div className="qa-year-group" key={year}>
+          <h4>{year}년</h4>
+          <ul>{rows.map((r,i) => <li key={i}>
+            <span className={`qa-badge qa-${resultClass[r.result]}`}>{r.result}</span>
+            <span className="qa-category">{r.category}</span>
+            <span className="qa-amount">{r.orig != null ? `원문 ${r.orig.toLocaleString()}` : '원문 결측'} · 집계 {r.calc.toLocaleString()}</span>
+            {r.rate != null && r.rate > 0 && <span className="qa-rate">오차율 {r.rate}%</span>}
+            {r.reason && <span className="qa-reason">{r.reason}</span>}
+          </li>)}</ul>
+        </div>
+      })}
+    </section>
   </>
 }
 
@@ -229,15 +279,27 @@ export default function App() {
   const getPage = () => location.hash.slice(1) || 'about'
   const [page, setPage] = useState(getPage)
   const [menu, setMenu] = useState(false)
+  const [openGroup, setOpenGroup] = useState(null)
   const [theme, setTheme] = useState(() => localStorage.getItem('yumocha-theme') || 'light')
-  useEffect(() => { const onHash=()=>{setPage(getPage());setMenu(false);scrollTo(0,0)}; addEventListener('hashchange',onHash); return()=>removeEventListener('hashchange',onHash)},[])
+  useEffect(() => { const onHash=()=>{setPage(getPage());setMenu(false);setOpenGroup(null);scrollTo(0,0)}; addEventListener('hashchange',onHash); return()=>removeEventListener('hashchange',onHash)},[])
   useEffect(() => { document.documentElement.setAttribute('data-theme', theme); localStorage.setItem('yumocha-theme', theme) }, [theme])
+  useEffect(() => {
+    if (!openGroup) return
+    const onClick = e => { if (!e.target.closest('.nav-group')) setOpenGroup(null) }
+    addEventListener('click', onClick)
+    return () => removeEventListener('click', onClick)
+  }, [openGroup])
   const navigate = id => { location.hash = id }
-  const Current = { about: About, trends: Trends, structure: Structure, results: Results, download: Download, sources: Sources, license: DataLicense, 'content-license': ContentLicense, privacy: PrivacyPolicy, checksums: Checksums }[page] || About
+  const Current = { about: About, trends: Trends, structure: Structure, results: Results, quality: Quality, download: Download, sources: Sources, license: DataLicense, 'content-license': ContentLicense, privacy: PrivacyPolicy, checksums: Checksums }[page] || About
   return <ThemeContext.Provider value={theme}><div className="site-shell">
     <a href="#main-content" className="skip-link">본문 바로가기</a>
     <header className="topbar"><button className="brand" onClick={()=>navigate('about')} aria-label="Yumocha 홈"><span><img src="/logo.png" alt="" /></span><strong>Yumocha</strong></button>
-      <nav className={menu?'open':''}>{pages.map(([id,label])=><button className={page===id?'active':''} key={id} onClick={()=>navigate(id)}>{label}</button>)}</nav>
+      <nav className={menu?'open':''}>{pages.map(p => p.children
+        ? <div className="nav-group" key={p.label}>
+            <button className={p.children.some(c=>c.id===page)?'active':''} aria-haspopup="true" aria-expanded={openGroup===p.label} onClick={()=>setOpenGroup(openGroup===p.label?null:p.label)}>{p.label}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+            <div className={`nav-dropdown${openGroup===p.label?' open':''}`}>{p.children.map(c=><button className={page===c.id?'active':''} key={c.id} onClick={()=>navigate(c.id)}>{c.label}</button>)}</div>
+          </div>
+        : <button className={page===p.id?'active':''} key={p.id} onClick={()=>navigate(p.id)}>{p.label}</button>)}</nav>
       <button className="theme-toggle" onClick={()=>setTheme(theme==='dark'?'light':'dark')} aria-label={theme==='dark'?'기본 화면 모드로 전환':'선명한 화면 모드로 전환'}>
         {theme==='dark'
           ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
@@ -255,7 +317,7 @@ export default function App() {
         </div>
         <div className="footer-col">
           <h3>바로가기</h3>
-          {pages.map(([id,label])=><button key={id} onClick={()=>navigate(id)}>{label}</button>)}
+          {flatPages.map(({id,label})=><button key={id} onClick={()=>navigate(id)}>{label}</button>)}
         </div>
         <div className="footer-col">
           <h3>관련 사이트</h3>
