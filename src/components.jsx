@@ -16,9 +16,9 @@ export function plotLayoutFor(theme) {
   }
 }
 
-export function Chart({ data, layout = {}, ariaLabel }) {
+export function Chart({ data, layout = {}, ariaLabel, tall }) {
   const theme = useTheme()
-  return <div className="chart" role="img" aria-label={ariaLabel}><Plot data={data} layout={{ ...plotLayoutFor(theme), ...layout, autosize: true }} config={plotConfig} useResizeHandler style={{ width: '100%', height: '100%' }} /></div>
+  return <div className={`chart${tall ? ' chart-tall' : ''}`} role="img" aria-label={ariaLabel}><Plot data={data} layout={{ ...plotLayoutFor(theme), ...layout, autosize: true }} config={plotConfig} useResizeHandler style={{ width: '100%', height: '100%' }} /></div>
 }
 
 export function PageHeader({ eyebrow, title, description, children }) {

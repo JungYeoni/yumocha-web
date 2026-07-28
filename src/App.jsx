@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Chart, Metric, Notice, PageHeader, plotLayout } from './components'
-import { budgetRows, checksums, files, indicators, nationalFertility, qaDetailRows, qaRows, regions, sources, trendRows, years } from './data'
+import { budgetRows, checksums, files, indicators, nationalFertility, officialCategory2024, officialCategoryLabels2024, qaDetailRows, qaRows, regions, sources, trendRows, years } from './data'
 import { ThemeContext, useTheme, themeColors } from './theme'
 
 const pages = [
@@ -92,18 +92,30 @@ function Trends() {
 function Structure() {
   const sorted = [...budgetRows].sort((a,b) => b.budget-a.budget)
   const c = themeColors[useTheme()]
+  const [budgetView, setBudgetView] = useState('domain')
+  const alphas = [1, .7, .45, .22]
+  const domainData = [
+    ['가족지원','family',1],['돌봄·교육','care',.7],['주거','housing',.45],['일·생활 균형','work',.22]
+  ].map(([name,key,alpha])=>({type:'bar', name, x:regions, y:budgetRows.map(x=>x[key]), marker:{color:`rgba(${c.accentRgb},${alpha})`}, hovertemplate:`%{x}<br>${name} %{y}%<extra></extra>`}))
+  const officialData = officialCategoryLabels2024.map((name, i) => ({
+    type:'bar', name, x: regions,
+    y: regions.map(r => { const vals = officialCategory2024[r]; return +(vals[i] / vals.reduce((a,b)=>a+b,0) * 100).toFixed(1) }),
+    marker:{color:`rgba(${c.accentRgb},${alphas[i]})`}, hovertemplate:`%{x}<br>${name} %{y}%<extra></extra>`,
+  }))
   return <>
     <PageHeader eyebrow="현황" title="재정 현황" description="지역의 구조적 여건과 계획예산의 규모·구성을 나란히 비교합니다."/>
     <div className="metric-row"><Metric label="분석 지역" value="17" sub="전국 광역 시도"/><Metric label="구조환경지표" value="21" sub="원자료 검증 완료"/><Metric label="예산 기준" value="당해예산" sub="전년도예산 제외"/><Metric label="데이터 기간" value="9년" sub="2016–2024"/></div>
     <section className="panel chart-panel">
       <div className="panel-head"><div><p className="eyebrow eyebrow-kr">계획예산</p><h2>지역별 계획예산 비교</h2></div><div className="panel-head-note"><p className="muted">단위: 억 원 · 구조 검증용 샘플</p><a className="text-button-inline" href="https://www.betterfuture.go.kr/front/policySpace/actionPlan.do" target="_blank" rel="noreferrer">시행계획 원문 보기 ↗</a></div></div>
-      <Chart ariaLabel="지역별 계획예산 막대 차트" data={[{type:'bar', orientation:'h', y:sorted.map(x=>x.region).reverse(), x:sorted.map(x=>x.budget).reverse(), marker:{color:sorted.map((_,i)=>`rgba(${c.accentRgb}, ${.42 + i/40})`).reverse()}, hovertemplate:'%{y}<br>%{x:,.0f}억 원<extra></extra>'}]} layout={{height:500, margin:{...plotLayout.margin,l:45}, xaxis:{tickformat:',', fixedrange:true}, yaxis:{fixedrange:true}, showlegend:false}}/>
+      <Chart tall ariaLabel="지역별 계획예산 막대 차트" data={[{type:'bar', orientation:'h', y:sorted.map(x=>x.region).reverse(), x:sorted.map(x=>x.budget).reverse(), marker:{color:sorted.map((_,i)=>`rgba(${c.accentRgb}, ${.42 + i/40})`).reverse()}, hovertemplate:'%{y}<br>%{x:,.0f}억 원<extra></extra>'}]} layout={{height:500, margin:{...plotLayout.margin,l:45}, xaxis:{tickformat:',', fixedrange:true}, yaxis:{fixedrange:true}, showlegend:false}}/>
     </section>
     <section className="panel chart-panel">
-      <div className="panel-head"><div><p className="eyebrow eyebrow-kr">정책영역 구성</p><h2>정책영역별 예산 구성</h2></div></div>
-      <Chart ariaLabel="지역별 정책영역 예산 구성 차트" data={[
-        ['가족지원','family',1],['돌봄·교육','care',.7],['주거','housing',.45],['일·생활 균형','work',.22]
-      ].map(([name,key,alpha])=>({type:'bar', name, x:regions, y:budgetRows.map(x=>x[key]), marker:{color:`rgba(${c.accentRgb},${alpha})`}, hovertemplate:`%{x}<br>${name} %{y}%<extra></extra>`}))} layout={{height:360,barmode:'stack',xaxis:{tickangle:-35,fixedrange:true},yaxis:{ticksuffix:'%',range:[0,100],fixedrange:true},legend:{orientation:'h',y:1.15,x:0}}}/>
+      <div className="panel-head"><div><p className="eyebrow eyebrow-kr">정책영역 구성</p><h2>정책영역별 예산 구성</h2></div><p className="muted">{budgetView==='official' ? '2024년 · 저출산·고령사회 기본계획(제4차) 공식 분류 · 실제 집계값' : '구조 검증용 샘플'}</p></div>
+      <div className="chart-toggle">
+        <button className={budgetView==='domain'?'active':''} onClick={()=>setBudgetView('domain')}>출생환경지표 영역 기준</button>
+        <button className={budgetView==='official'?'active':''} onClick={()=>setBudgetView('official')}>기본계획 공식 분류기준</button>
+      </div>
+      <Chart ariaLabel="지역별 정책영역 예산 구성 차트" data={budgetView==='domain' ? domainData : officialData} layout={{height:360,barmode:'stack',xaxis:{tickangle:-35,fixedrange:true},yaxis:{ticksuffix:'%',range:[0,100],fixedrange:true},legend:{orientation:'h',y:1.15,x:0}}}/>
     </section>
     <Notice type="warn">계획예산은 사업 추진 의지와 재정 규모를 보여주는 행정계획상 수치이며, 실제 집행액이나 정책효과를 의미하지 않습니다. 시행계획 문서의 '당해예산'은 연초에 편성한 본예산이며, 추경·이월을 반영해 연말에 확정되는 최종 집행 예산과는 다릅니다. 본 사이트는 각 연도 시행계획의 당해예산(본예산)만 합산하며, 다음 연도 문서에 기재된 전년도예산(최종예산)은 사업 폐지·명칭 변경 시 누락될 수 있어 사용하지 않습니다.</Notice>
   </>
@@ -146,7 +158,7 @@ function Quality() {
     </div>
     <section className="panel chart-panel wide">
       <div className="panel-head"><div><p className="eyebrow eyebrow-kr">지역 × 연도</p><h2>세부사업 예산결측 비율</h2></div><p className="muted">단위: % (해당 지역·연도 세부사업수 대비)</p></div>
-      <Chart ariaLabel="지역과 연도별 예산결측 비율 히트맵" data={[{ type:'heatmap', z, x: years, y: regions, colorscale: [[0, c.zoneA],[1, c.accent]], hoverongaps:false, hovertemplate:'%{y} %{x}<br>결측비율 %{z}%<extra></extra>', colorbar:{ title:'%', thickness:14 } }]} layout={{ height:520, xaxis:{ type:'category', fixedrange:true }, yaxis:{ fixedrange:true, autorange:'reversed' } }}/>
+      <Chart tall ariaLabel="지역과 연도별 예산결측 비율 히트맵" data={[{ type:'heatmap', z, x: years, y: regions, colorscale: [[0, c.zoneA],[1, c.accent]], hoverongaps:false, hovertemplate:'%{y} %{x}<br>결측비율 %{z}%<extra></extra>', colorbar:{ title:'%', thickness:14 } }]} layout={{ height:520, xaxis:{ type:'category', fixedrange:true }, yaxis:{ fixedrange:true, autorange:'reversed' } }}/>
     </section>
     <aside className="panel reading-guide qa-guide"><p className="eyebrow eyebrow-kr">방법</p><h2>어떻게 검증했나요?</h2><ol><li><strong>세부사업 결측</strong>: 시행계획 원문에 세부사업 항목은 있지만 예산금액 칸이 비어 있으면 결측으로 표시합니다.</li><li><strong>중분류 소계 검증</strong>: 시행계획 원문에 적힌 중분류별 소계값(원문)과, 그 아래 딸린 세부사업 예산을 모두 더한 값(집계)을 비교합니다.</li><li><strong>판정 기준</strong>: 두 값의 오차율이 허용기준 이내면 일치, 벗어나면 불일치, 원문에 소계값 자체가 없으면 판정불가로 표시합니다.</li><li><strong>불일치의 의미</strong>: 소계와 세부사업 합계가 다르다는 뜻일 뿐, 어느 쪽이 맞는지는 판단하지 않습니다. 원문 기재 오류일 수도, 저희가 세부사업을 일부 놓쳤을 수도 있어 임의로 보정하지 않고 그대로 둡니다. 해당 지역·연도의 예산 총액은 이 점을 감안해 참고하십시오.</li></ol></aside>
     {flagged.length>0 && <div className="notice warn qa-flagged"><span aria-hidden="true">!</span><div><strong>원자료 누락 주의 지역·연도</strong><ul>{flagged.map(r=><li key={`${r.region}-${r.year}`}><strong>{r.region} {r.year}년:</strong> {r.note}</li>)}</ul></div></div>}
