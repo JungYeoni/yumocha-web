@@ -65,7 +65,7 @@ function Trends() {
       <label>지표<select value={indicator} onChange={e => setIndicator(e.target.value)}>{indicators.map(x => <option value={x.value} key={x.value}>{x.label}</option>)}</select></label>
       <div className="legend"><span className="dot plan3"/>제3차 기본계획<span className="dot plan4"/>제4차 기본계획</div>
     </div>
-    <p className="muted legend-note">저출산·고령사회 기본계획은 5년 단위로 개편됩니다. 2016~2020년 제3차 계획은 출산율을 끌어올리는 데 목표를 두고 신혼부부, 난임부부 등 특정 대상 지원에 집중했습니다. 2021년부터 시작된 제4차 계획은 출산율 목표치를 없애고 모든 가족과 개인의 삶의 질을 높이는 쪽으로 정책 목표를 바꿨고, 지원 대상도 1인가구와 한부모가족 등 다양한 가족형태로 넓어졌습니다.</p>
+    <Notice>저출산·고령사회 기본계획은 5년 단위로 개편됩니다. 2016~2020년 제3차 계획은 출산율을 끌어올리는 데 목표를 두고 신혼부부, 난임부부 등 특정 대상 지원에 집중했습니다. 2021년부터 시작된 제4차 계획은 출산율 목표치를 없애고 모든 가족과 개인의 삶의 질을 높이는 쪽으로 정책 목표를 바꿨고, 지원 대상도 1인가구와 한부모가족 등 다양한 가족형태로 넓어졌습니다.</Notice>
     <div className="dashboard-grid">
       <section className="panel chart-panel wide">
         <div className="panel-head"><div><p className="eyebrow">{region} · 2016–2024</p><h2>{meta.label} 추세</h2></div><div className="value-chip"><strong>{last[indicator]}</strong> {meta.unit}<small>{last.year} {isReal ? '통계청 공표값' : '구조 검증용 샘플'}</small></div></div>
@@ -145,7 +145,8 @@ function Quality() {
       <div className="panel-head"><div><p className="eyebrow eyebrow-kr">지역 × 연도</p><h2>세부사업 예산결측 비율</h2></div><p className="muted">단위: % (해당 지역·연도 세부사업수 대비)</p></div>
       <Chart ariaLabel="지역과 연도별 예산결측 비율 히트맵" data={[{ type:'heatmap', z, x: years, y: regions, colorscale: [[0, c.zoneA],[1, c.accent]], hoverongaps:false, hovertemplate:'%{y} %{x}<br>결측비율 %{z}%<extra></extra>', colorbar:{ title:'%', thickness:14 } }]} layout={{ height:520, xaxis:{ type:'category', fixedrange:true }, yaxis:{ fixedrange:true, autorange:'reversed' } }}/>
     </section>
-    {flagged.length>0 && <section className="limitations"><div><p className="eyebrow eyebrow-kr">주의</p><h2>원자료 누락<br/>주의 지역·연도</h2></div><ul>{flagged.map(r=><li key={`${r.region}-${r.year}`}><strong>{r.region} {r.year}년</strong> — {r.note}</li>)}</ul></section>}
+    <aside className="panel reading-guide qa-guide"><p className="eyebrow eyebrow-kr">방법</p><h2>어떻게 검증했나요?</h2><ol><li><strong>세부사업 결측</strong>: 시행계획 원문에 세부사업 항목은 있지만 예산금액 칸이 비어 있으면 결측으로 표시합니다.</li><li><strong>중분류 소계 검증</strong>: 시행계획 원문에 적힌 중분류별 소계값(원문)과, 그 아래 딸린 세부사업 예산을 모두 더한 값(집계)을 비교합니다.</li><li><strong>판정 기준</strong>: 두 값의 오차율이 허용기준 이내면 일치, 벗어나면 불일치, 원문에 소계값 자체가 없으면 판정불가로 표시합니다.</li></ol></aside>
+    {flagged.length>0 && <section className="limitations"><div><p className="eyebrow eyebrow-kr">주의</p><h2>원자료 누락<br/>주의 지역·연도</h2></div><ul>{flagged.map(r=><li key={`${r.region}-${r.year}`}><strong>{r.region} {r.year}년:</strong> {r.note}</li>)}</ul></section>}
     <div className="filter-bar qa-detail-filter">
       <label>지역<select value={region} onChange={e => setRegion(e.target.value)}>{regions.map(x => <option key={x}>{x}</option>)}</select></label>
     </div>
