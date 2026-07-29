@@ -48,7 +48,7 @@ function About({ navigate }) {
         </div>
         <details className="prose-detail">
           <summary>검증 방법 자세히 보기</summary>
-          <p>21개 구조환경지표는 공개된 값을 그대로 옮기지 않고 원자료 기준으로 전수 재계산해 대조했습니다. 이 과정에서 산식이 다르게 적용된 사례 3건을 발견해 원자료 제공기관의 자료 수정으로 이어졌으며, 남은 지표도 결측·확인 필요 여부를 함께 표시합니다.</p>
+          <p>21개 구조환경지표의 산식과 지표 설계는 제주여성가족연구원이 먼저 만든 출산환경지수 연구를 참고했습니다. 공개된 값을 그대로 옮기지 않고 원자료 기준으로 전수 재계산해 대조했으며, 이 과정에서 산식이 다르게 적용된 사례 3건을 발견해 원자료 제공기관의 자료 수정으로 이어졌습니다. 남은 지표도 결측·확인 필요 여부를 함께 표시합니다.</p>
           <p>계획예산도 시행계획 원문과 세부사업 단위로 직접 대조합니다. 예산금액이 비어 있는 세부사업 287건을 확인했고, 중분류 소계와 세부사업 합계가 어긋나는 항목도 임의로 보정하지 않고 그대로 공개합니다. 자세한 내역은 <button className="text-button-inline" onClick={()=>navigate('quality')}>예산 정합성 검증</button> 페이지에서 확인할 수 있습니다.</p>
         </details>
       </div>
@@ -178,6 +178,8 @@ function Quality() {
   const totalDetail = qaRows.reduce((s,r)=>s+r.detail, 0)
   const missingRows = qaRows.filter(r=>r.missing>0).length
   const flagged = qaRows.filter(r=>r.note)
+  const missingByRegion = regions.map(r => [r, qaRows.filter(x=>x.region===r).reduce((s,x)=>s+x.missing,0)]).sort((a,b)=>b[1]-a[1])
+  const [topRegion, topRegionMissing] = missingByRegion[0]
   const resultClass = { 일치: 'ok', 불일치: 'mismatch', 판정불가: 'unknown' }
   return <>
     <PageHeader eyebrow="분석" title="예산 정합성 검증" description="계획예산 세부사업의 결측 비율과 중분류 소계 검증 결과를 지역별로 살펴봅니다."><span className="status-pill">공개 데이터 기반</span></PageHeader>
@@ -186,6 +188,7 @@ function Quality() {
       <Metric label="결측 세부사업" value={`${totalMissing}건`} sub={`전체 ${totalDetail.toLocaleString()}건 중 ${(totalMissing/totalDetail*100).toFixed(1)}%`}/>
       <Metric label="결측 발생 지역·연도" value={`${missingRows}개`} sub="전체 153개 지역·연도 중"/>
       <Metric label="결측 최다 연도" value="2018년" sub="123건 · 전체 결측의 43%"/>
+      <Metric label="결측 최다 지역" value={topRegion} sub={`${topRegionMissing}건 · 전체 결측의 ${(topRegionMissing/totalMissing*100).toFixed(1)}%`}/>
     </div>
     <section className="panel chart-panel wide">
       <div className="panel-head"><div><p className="eyebrow eyebrow-kr">지역 × 연도</p><h2>세부사업 예산결측 비율</h2></div><p className="muted">단위: % (해당 지역·연도 세부사업수 대비)</p></div>
