@@ -170,6 +170,7 @@ function Results() {
 
 function Quality() {
   const [region, setRegion] = useState(regions[0])
+  const [resultFilter, setResultFilter] = useState('전체')
   const c = themeColors[useTheme()]
   const byKey = Object.fromEntries(qaRows.map(r => [`${r.region}-${r.year}`, r]))
   const z = regions.map(r => years.map(year => +(byKey[`${r}-${year}`].missing / byKey[`${r}-${year}`].detail * 100).toFixed(1)))
@@ -179,7 +180,7 @@ function Quality() {
   const flagged = qaRows.filter(r=>r.note)
   const resultClass = { 일치: 'ok', 불일치: 'mismatch', 판정불가: 'unknown' }
   return <>
-    <PageHeader eyebrow="분석" title="예산 정합성 검증" description="계획예산 세부사업 중 예산금액이 비어 있는 항목의 비율과, 중분류 소계-세부사업 합계 검증 결과를 지역별로 살펴봅니다."><span className="status-pill">공개 데이터 기반</span></PageHeader>
+    <PageHeader eyebrow="분석" title="예산 정합성 검증" description="계획예산 세부사업의 결측 비율과 중분류 소계 검증 결과를 지역별로 살펴봅니다."><span className="status-pill">공개 데이터 기반</span></PageHeader>
     <Notice>analysis_panel.csv·QA 검증결과에 포함된 실제 집계값입니다(가상값 아님). 결측 세부사업은 계획예산 합계에서 제외되므로, 결측이 많은 지역·연도는 실제보다 예산이 과소집계됐을 수 있습니다. 중분류명은 시행계획 원문의 목차 구조를 그대로 표기하며, 연도별로 명칭이 달라질 수 있습니다.</Notice>
     <div className="metric-row">
       <Metric label="결측 세부사업" value={`${totalMissing}건`} sub={`전체 ${totalDetail.toLocaleString()}건 중 ${(totalMissing/totalDetail*100).toFixed(1)}%`}/>
@@ -194,12 +195,14 @@ function Quality() {
     {flagged.length>0 && <div className="notice warn qa-flagged"><span aria-hidden="true">!</span><div><strong>원자료 누락 주의 지역·연도</strong><ul>{flagged.map(r=><li key={`${r.region}-${r.year}`}><strong>{r.region} {r.year}년:</strong> {r.note}</li>)}</ul></div></div>}
     <div className="filter-bar qa-detail-filter">
       <label>지역<select value={region} onChange={e => setRegion(e.target.value)}>{regions.map(x => <option key={x}>{x}</option>)}</select></label>
+      <label>결과<select value={resultFilter} onChange={e => setResultFilter(e.target.value)}><option>전체</option><option>일치</option><option>불일치</option><option>판정불가</option></select></label>
     </div>
-    <p className="sr-only" aria-live="assertive">{region} 연도별 중분류 소계 검증 내역으로 업데이트됨</p>
+    <p className="sr-only" aria-live="assertive">{region} {resultFilter !== '전체' && `${resultFilter} `}연도별 중분류 소계 검증 내역으로 업데이트됨</p>
     <section className="panel qa-detail">
       <div className="panel-head"><div><p className="eyebrow eyebrow-kr">{region}</p><h2>연도별 중분류 소계 검증 내역</h2></div><p className="muted">중분류 소계(원문) ↔ 세부사업 합계(집계) 비교 · 단위: 백만 원</p></div>
+      {!qaDetailRows.some(r => r.region === region && (resultFilter === '전체' || r.result === resultFilter)) && <p className="muted">조건에 맞는 결과가 없습니다.</p>}
       {years.map(year => {
-        const rows = qaDetailRows.filter(r => r.region === region && r.year === year)
+        const rows = qaDetailRows.filter(r => r.region === region && r.year === year && (resultFilter === '전체' || r.result === resultFilter))
         if (!rows.length) return null
         return <div className="qa-year-group" key={year}>
           <h4>{year}년</h4>
