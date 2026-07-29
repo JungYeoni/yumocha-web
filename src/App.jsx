@@ -283,8 +283,7 @@ function ProjectList() {
 
   return <>
     <PageHeader eyebrow="분석" title="사업 목록" description="시행계획 원문에서 추출한 지역·연도별 세부사업 목록입니다."><a className="primary" href="/regional_project_list.csv" download>CSV로 다운로드 <span>↓</span></a></PageHeader>
-    <Notice type="warn">이 목록은 각 지자체가 개별 발간한 시행계획 PDF를 파싱해 정제한 세부사업명·예산입니다. 원문 발간처가 별도 재사용 허가(공공누리 등)를 명시하지 않아, 재배포 조건이 확인되지 않은 자료입니다 — 참고용으로만 활용해 주세요.</Notice>
-    <Notice>증감율은 이번 연도 문서에 다시 적힌 전년도예산 대비 변화율입니다. 전년도 문서 자체의 당해예산과 다를 수 있고, 사업명이 바뀌거나 신설·폐지된 경우 결측되거나 왜곡될 수 있습니다.</Notice>
+    <Notice type="warn">이 목록은 각 지자체가 개별 발간한 시행계획 PDF를 파싱해 정제한 세부사업명·예산입니다. 원문 발간처가 별도 재사용 허가(공공누리 등)를 명시하지 않아, 재배포 조건이 확인되지 않은 자료이니 참고용으로만 활용해 주세요. 증감율은 이번 연도 문서에 다시 적힌 전년도예산 대비 변화율로, 전년도 문서 자체의 당해예산과 다르거나 사업명이 바뀌거나 신설·폐지된 경우 결측되거나 왜곡될 수 있습니다.</Notice>
     <div className="filter-bar">
       <label>지역<select value={region} onChange={e => setRegion(e.target.value)}><option>전체</option>{regions.map(x => <option key={x}>{x}</option>)}</select></label>
       <label>연도<select value={year} onChange={e => setYear(e.target.value)}><option>전체</option>{years.map(y => <option key={y}>{y}</option>)}</select></label>
