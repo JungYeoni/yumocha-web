@@ -10,6 +10,7 @@ const pages = [
   { label: '분석 결과', children: [
     { id: 'results', label: '재정반응성 분석' },
     { id: 'quality', label: '예산 정합성 검증' },
+    { id: 'projects', label: '사업 목록' },
   ] },
   { id: 'download', label: '데이터 다운로드' },
 ]
@@ -215,6 +216,104 @@ function Quality() {
   </>
 }
 
+function parseProjectCsv(text) {
+  const rows = []
+  let row = [], cur = '', inQuotes = false
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i]
+    if (inQuotes) {
+      if (ch === '"') { if (text[i+1] === '"') { cur += '"'; i++ } else inQuotes = false }
+      else cur += ch
+    } else {
+      if (ch === '"') inQuotes = true
+      else if (ch === ',') { row.push(cur); cur = '' }
+      else if (ch === '\n' || ch === '\r') {
+        if (ch === '\r' && text[i+1] === '\n') i++
+        row.push(cur); cur = ''
+        rows.push(row); row = []
+      } else cur += ch
+    }
+  }
+  if (cur !== '' || row.length) { row.push(cur); rows.push(row) }
+  return rows.filter(r => r.length > 1 || r[0] !== '')
+}
+
+function pageWindow(current, total, span = 2) {
+  const pages = [1]
+  const start = Math.max(2, current - span)
+  const end = Math.min(total - 1, current + span)
+  if (start > 2) pages.push('…s')
+  for (let i = start; i <= end; i++) pages.push(i)
+  if (end < total - 1) pages.push('…e')
+  if (total > 1) pages.push(total)
+  return pages
+}
+
+function ProjectList() {
+  const [rows, setRows] = useState(null)
+  const [error, setError] = useState(false)
+  const [region, setRegion] = useState('전체')
+  const [year, setYear] = useState('전체')
+  const [search, setSearch] = useState('')
+  const [page, setPage] = useState(1)
+  const perPage = 50
+
+  useEffect(() => {
+    fetch('/regional_project_list.csv')
+      .then(r => { if (!r.ok) throw new Error('load failed'); return r.text() })
+      .then(text => {
+        const parsed = parseProjectCsv(text)
+        setRows(parsed.slice(1).map(r => ({
+          year: r[0], region: r[1], major: r[2], minor: r[3], type: r[4], name: r[5],
+          cur: r[6] ? +r[6] : null, prev: r[7] ? +r[7] : null, diffAmt: r[8] ? +r[8] : null, diffPct: r[9] ? +r[9] : null,
+        })))
+      })
+      .catch(() => setError(true))
+  }, [])
+
+  useEffect(() => { setPage(1) }, [region, year, search])
+
+  const filtered = rows ? rows.filter(r =>
+    (region === '전체' || r.region === region) &&
+    (year === '전체' || r.year === String(year)) &&
+    (search === '' || r.name.includes(search))
+  ) : []
+  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage))
+  const pageRows = filtered.slice((page - 1) * perPage, page * perPage)
+
+  return <>
+    <PageHeader eyebrow="분석" title="사업 목록" description="시행계획 원문에서 추출한 지역·연도별 세부사업 목록입니다."><a className="primary" href="/regional_project_list.csv" download>CSV로 다운로드 <span>↓</span></a></PageHeader>
+    <Notice type="warn">이 목록은 각 지자체가 개별 발간한 시행계획 PDF를 파싱해 정제한 세부사업명·예산입니다. 원문 발간처가 별도 재사용 허가(공공누리 등)를 명시하지 않아, 재배포 조건이 확인되지 않은 자료입니다 — 참고용으로만 활용해 주세요.</Notice>
+    <Notice>증감율은 이번 연도 문서에 다시 적힌 전년도예산 대비 변화율입니다. 전년도 문서 자체의 당해예산과 다를 수 있고, 사업명이 바뀌거나 신설·폐지된 경우 결측되거나 왜곡될 수 있습니다.</Notice>
+    <div className="filter-bar">
+      <label>지역<select value={region} onChange={e => setRegion(e.target.value)}><option>전체</option>{regions.map(x => <option key={x}>{x}</option>)}</select></label>
+      <label>연도<select value={year} onChange={e => setYear(e.target.value)}><option>전체</option>{years.map(y => <option key={y}>{y}</option>)}</select></label>
+      <label>사업명 검색<input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="사업명을 입력하세요"/></label>
+    </div>
+    {!rows && !error && <p className="muted">불러오는 중입니다… (약 8MB · 57,000여 건)</p>}
+    {error && <Notice type="warn">목록을 불러오지 못했습니다. 새로고침해 주세요.</Notice>}
+    {rows && <>
+      <p className="muted">총 {filtered.length.toLocaleString()}건{region !== '전체' && ` · ${region}`}{year !== '전체' && ` · ${year}년`} · 단위: 백만 원</p>
+      <section className="project-table">
+        <div className="project-row project-head"><span>연도</span><span>지역</span><span>중분류</span><span>세부사업명</span><span>당해예산</span><span>증감율</span></div>
+        {pageRows.map((r, i) => <div className="project-row" key={i}>
+          <span>{r.year}</span><span>{r.region}</span><span>{r.minor}</span><span>{r.name}</span>
+          <span>{r.cur != null ? r.cur.toLocaleString() : ''}</span>
+          <span className={r.diffPct > 0 ? 'up' : r.diffPct < 0 ? 'down' : ''}>{r.diffPct != null ? `${r.diffPct > 0 ? '+' : ''}${r.diffPct}%` : ''}</span>
+        </div>)}
+      </section>
+      <div className="pagination">
+        <button className="page-nav" disabled={page === 1} onClick={() => setPage(p => p - 1)}>이전</button>
+        {pageWindow(page, totalPages).map((p, i) => typeof p === 'number'
+          ? <button key={p} className={`page-num${p === page ? ' active' : ''}`} onClick={() => setPage(p)}>{p}</button>
+          : <span key={p + i} className="pagination-ellipsis">…</span>
+        )}
+        <button className="page-nav" disabled={page === totalPages} onClick={() => setPage(p => p + 1)}>다음</button>
+      </div>
+    </>}
+  </>
+}
+
 function Download({ navigate }) {
   return <>
     <PageHeader eyebrow="공개 데이터" title="데이터 다운로드" description="분석에 사용한 집계 데이터와 품질 정보를 버전 단위로 공개합니다."><div className="version-card"><span>최신 버전</span><strong>v0.1.0 · 부분 공개</strong><small>생성일 2026-07-27</small></div></PageHeader>
@@ -336,7 +435,7 @@ export default function App() {
     return () => removeEventListener('click', onClick)
   }, [openGroup])
   const navigate = id => { location.hash = id }
-  const Current = { about: About, trends: Trends, structure: Structure, results: Results, quality: Quality, download: Download, sources: Sources, license: DataLicense, 'content-license': ContentLicense, privacy: PrivacyPolicy, checksums: Checksums }[page] || About
+  const Current = { about: About, trends: Trends, structure: Structure, results: Results, quality: Quality, projects: ProjectList, download: Download, sources: Sources, license: DataLicense, 'content-license': ContentLicense, privacy: PrivacyPolicy, checksums: Checksums }[page] || About
   return <ThemeContext.Provider value={theme}><div className="site-shell">
     <a href="#main-content" className="skip-link">본문 바로가기</a>
     <header className="topbar"><button className="brand" onClick={()=>navigate('about')} aria-label="Yumocha 홈"><span><img src="/logo.png" alt="" /></span><strong>Yumocha</strong></button>
