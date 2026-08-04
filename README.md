@@ -38,7 +38,7 @@
 <tr>
 <td width="25%" align="center">
 <h3>🧮 정적, 그래서 단순</h3>
-<p>원자료 정제·회귀 계산 없이<br/>검증된 CSV/JSON만 읽어 그림</p>
+<p>원자료 정제·회귀 계산 없이<br/>검증된 데이터만 표시</p>
 </td>
 <td width="25%" align="center">
 <h3>🔍 정합성 그대로 공개</h3>
@@ -50,7 +50,7 @@
 </td>
 <td width="25%" align="center">
 <h3>🔗 출처 추적 가능</h3>
-<p>지표별 원자료·접근일·라이선스를<br/><code>SOURCES.csv</code>로 관리</p>
+<p>원자료 출처·접근일을<br/><code>SOURCES.csv</code>로 관리</p>
 </td>
 </tr>
 </table>
