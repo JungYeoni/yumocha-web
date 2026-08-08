@@ -16,14 +16,24 @@ export function plotLayoutFor(theme) {
   }
 }
 
-export function Chart({ data, layout = {}, ariaLabel, tall }) {
+export function Chart({ data, layout = {}, ariaLabel, tall, interpretation }) {
   const theme = useTheme()
-  return <div className={`chart${tall ? ' chart-tall' : ''}`} role="img" aria-label={ariaLabel}><Plot data={data} layout={{ ...plotLayoutFor(theme), ...layout, autosize: true }} config={plotConfig} useResizeHandler style={{ width: '100%', height: '100%' }} /></div>
+  const height = layout.height ?? (tall ? 520 : 350)
+  const manySeries = data.length > 5
+  const baseMargin = { ...plotLayoutFor(theme).margin, ...layout.margin }
+  const mergedLayout = {
+    ...plotLayoutFor(theme), ...layout, autosize: true,
+    margin: manySeries ? { ...baseMargin, b: Math.max(baseMargin.b ?? 0, 140) } : baseMargin,
+    legend: manySeries ? { orientation: 'h', x: 0, y: -0.28, xanchor: 'left', yanchor: 'top', ...layout.legend } : layout.legend,
+    xaxis: { automargin: true, ...layout.xaxis },
+    yaxis: { automargin: true, ...layout.yaxis },
+  }
+  return <><div className={`chart${tall ? ' chart-tall' : ''}`} style={{ height }} role="img" aria-label={ariaLabel}><Plot data={data} layout={mergedLayout} config={plotConfig} useResizeHandler style={{ width: '100%', height: '100%' }} /></div>{interpretation && <div className="chart-interpretation"><strong>해석</strong><p>{interpretation}</p></div>}</>
 }
 
 export function PageHeader({ eyebrow, title, description, children }) {
   return <header className="page-header">
-    <div><p className="eyebrow eyebrow-kr">{eyebrow}</p><h1>{title}</h1><p className="lede">{description}</p></div>
+    <div>{eyebrow && <p className="eyebrow eyebrow-kr">{eyebrow}</p>}<h1>{title}</h1><p className="lede">{description}</p></div>
     {children}
   </header>
 }

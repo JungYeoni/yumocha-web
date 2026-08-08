@@ -1,16 +1,23 @@
 import { useEffect, useState } from 'react'
 import { Chart, Metric, Notice, PageHeader, plotLayout } from './components'
-import { budgetByYear, budgetRows, checksums, cpi, files, indicators, nationalFertility, officialCategory2024, officialCategoryLabels2024, qaDetailRows, qaRows, regions, sources, structuralIndicators, trendRows, years } from './data'
+import { budgetByYear, budgetRows, checksums, cpi, files, indicators, nationalFertility, officialCategory2024, officialCategoryLabels2024, qaDetailRows, qaRows, references, regions, responseByDomain, responseByRegion, sources, structuralIndicators, trendRows, years } from './data'
 import { ThemeContext, useTheme, themeColors } from './theme'
+import { FiscalResponseAnalysis, RelationshipAnalysis, StructuralIndexAnalysis } from './analysisPages'
 
 const pages = [
   { id: 'about', label: '프로젝트 소개' },
-  { id: 'trends', label: '지표 추이' },
-  { id: 'structure', label: '재정 현황' },
   { label: '분석 결과', children: [
-    { id: 'results', label: '재정반응성 분석' },
+    { id: 'structural-analysis', label: '구조환경지수 분석' },
+    { id: 'fiscal-analysis', label: '재정대응 분석' },
+    { id: 'relationship-analysis', label: '재정지출–출산율 관계' },
+  ] },
+  { label: '데이터 검증', children: [
     { id: 'quality', label: '예산 정합성 검증' },
     { id: 'projects', label: '사업 목록' },
+  ] },
+  { label: '연구 문서', children: [
+    { id: 'sources', label: '원출처 목록' },
+    { id: 'references', label: '참고문헌' },
   ] },
   { id: 'download', label: '데이터 다운로드' },
 ]
@@ -152,19 +159,22 @@ function Structure() {
 }
 
 function Results() {
-  const coef = [{lag:'1년 시차',x:.018,lo:-.012,hi:.048},{lag:'2년 시차',x:.031,lo:-.006,hi:.068}]
   const c = themeColors[useTheme()]
   return <>
-    <PageHeader eyebrow="분석" title="분석 결과" description="재정대응 수준과 이후 합계출산율 변화의 조건부·시차적 연관성을 살펴봅니다."><span className="status-pill">결과 연결 대기</span></PageHeader>
-    <Notice>회귀모형과 종합지수 확정 후 검증된 결과가 이 페이지에 연결됩니다. 아래 구성은 결과 표시 방식의 미리보기이며 계수는 설명용 가상값입니다.</Notice>
-    <div className="metric-row"><Metric label="분석 단위" value="지역 × 연도" sub="패널 데이터"/><Metric label="시차 설정" value="t+1 · t+2" sub="1년·2년 후 변화"/><Metric label="추정 대상" value="조건부 연관성" sub="인과효과 아님"/></div>
+    <PageHeader eyebrow="분석" title="재정 대응 방향" description="구조환경이 하락한 뒤 같은 영역의 계획예산 비중이 증가했는지 살펴봅니다."><span className="status-pill">실제 분석 결과</span></PageHeader>
+    <Notice>구조환경지수가 <strong>t→t+1</strong>에 하락하고, 같은 세부영역의 계획예산 비중이 <strong>t+2→t+3</strong>에 증가한 경우를 ‘대응 방향 일치’로 집계했습니다. 이는 기술통계이며 정책 성과나 인과효과를 뜻하지 않습니다.</Notice>
+    <div className="metric-row"><Metric label="구조환경 하락" value="295건" sub="2016–2021 기준 변화 사례"/><Metric label="후행 예산비중 증가" value="147건" sub="같은 세부영역"/><Metric label="방향 일치율" value="49.8%" sub="147 / 295건"/><Metric label="분석 범위" value="17개 시도" sub="11개 세부영역"/></div>
     <div className="results-grid">
-      <section className="panel chart-panel"><div className="panel-head"><div><p className="eyebrow eyebrow-kr">회귀계수 플롯</p><h2>핵심 회귀계수와 95% 신뢰구간</h2></div></div>
-        <Chart ariaLabel="회귀계수와 신뢰구간 예시" data={[{type:'scatter',mode:'markers',y:coef.map(x=>x.lag),x:coef.map(x=>x.x),error_x:{type:'data',symmetric:false,array:coef.map(x=>x.hi-x.x),arrayminus:coef.map(x=>x.x-x.lo),color:c.accent,thickness:2,width:5},marker:{size:12,color:c.accent},hovertemplate:'%{y}<br>계수 %{x:.3f}<extra>설명용 가상값</extra>'}]} layout={{height:300,shapes:[{type:'line',x0:0,x1:0,y0:-.5,y1:1.5,line:{color:c.line,dash:'dot'}}],xaxis:{title:'표준화 회귀계수',fixedrange:true},yaxis:{fixedrange:true},showlegend:false}}/>
+      <section className="panel chart-panel"><div className="panel-head"><div><p className="eyebrow eyebrow-kr">세부영역</p><h2>구조환경 하락 뒤 예산비중 증가율</h2></div></div>
+        <Chart tall ariaLabel="세부영역별 대응 방향 일치율" data={[{type:'bar',orientation:'h',y:responseByDomain.map(x=>x.domain).reverse(),x:responseByDomain.map(x=>x.rate).reverse(),customdata:responseByDomain.map(x=>[x.increases,x.declines]).reverse(),marker:{color:c.accent},hovertemplate:'%{y}<br>%{customdata[0]}/%{customdata[1]}건 · %{x:.1f}%<extra></extra>'}]} layout={{height:520,margin:{...plotLayout.margin,l:120},xaxis:{title:'대응 방향 일치율 (%)',range:[0,70],fixedrange:true},yaxis:{fixedrange:true},showlegend:false}}/>
       </section>
-      <aside className="panel reading-guide"><p className="eyebrow eyebrow-kr">읽는 법</p><h2>어떻게 읽나요?</h2><ol><li><strong>점</strong>은 추정된 연관성의 방향과 크기를 나타냅니다.</li><li><strong>가로선</strong>은 95% 신뢰구간입니다.</li><li>신뢰구간이 0을 포함하면 통계적 불확실성이 큽니다.</li></ol></aside>
+      <aside className="panel reading-guide"><p className="eyebrow eyebrow-kr">읽는 법</p><h2>어떻게 읽나요?</h2><ol><li><strong>49.8%</strong>는 하락 사례의 약 절반에서만 이후 예산비중 증가가 관찰됐다는 뜻입니다.</li><li>경제적 여건은 2건, 산후조리 여건은 0건이라 영역 간 비교에 적합하지 않습니다.</li><li>예산누락주의 사례를 제외하면 일부 영역의 비율이 달라질 수 있습니다.</li></ol></aside>
     </div>
-    <section className="limitations"><div><p className="eyebrow eyebrow-kr">해석</p><h2>숫자보다 먼저<br/>확인할 것</h2></div><ul><li>관찰자료 분석은 미측정 교란과 역인과 가능성을 배제하지 못합니다.</li><li>계획예산은 실제 집행 시점·규모와 다를 수 있습니다.</li><li>지역별 정책 구성과 대상 집단의 차이를 계수 하나로 환원할 수 없습니다.</li><li>전국 공표값과 17개 시도의 단순평균은 구분해 표시합니다.</li><li>다년도로 관측치를 늘려도 같은 지역의 인접 연도 값은 서로 비슷해(자기상관), 분석의 실질 정보량은 지역 수 17개에 가깝습니다.</li><li>2021년 제4차 기본계획부터 정책 목표와 대상 가족 개념 자체가 재편(출산율 목표치 폐기, 삶의 질·성평등 중심으로 전환)되어, 제3차·제4차 기간의 "저출산 대응 예산"이 같은 기준으로 집계된 것이 아닐 수 있습니다.</li></ul></section>
+    <section className="panel chart-panel"><div className="panel-head"><div><p className="eyebrow eyebrow-kr">17개 시도</p><h2>지역별 대응 방향 일치율</h2></div><p className="muted">막대 위에 증가건수/하락사례수 표시</p></div>
+      <Chart tall ariaLabel="시도별 대응 방향 일치율" data={[{type:'bar',x:responseByRegion.map(x=>x.region),y:responseByRegion.map(x=>x.rate),text:responseByRegion.map(x=>`${x.increases}/${x.declines}`),textposition:'outside',customdata:responseByRegion.map(x=>[x.rank,x.caution]),marker:{color:responseByRegion.map((_,i)=>`rgba(${c.accentRgb},${1-i*.035})`)},hovertemplate:'%{x}<br>%{text}건 · %{y:.1f}%<br>공동 %{customdata[0]}위 · 누락주의 %{customdata[1]}건<extra></extra>'}]} layout={{height:520,margin:{...plotLayout.margin,t:45},xaxis:{tickangle:-35,fixedrange:true},yaxis:{title:'대응 방향 일치율 (%)',range:[0,72],fixedrange:true},showlegend:false}}/>
+    </section>
+    <Notice type="warn">지역 순위는 <strong>재정 대응의 방향 일치율</strong> 순위일 뿐 정책 성과·예산 효과·행정역량 순위가 아닙니다. 사례 수가 적으면 비율이 크게 흔들릴 수 있으므로 반드시 분자와 분모를 함께 확인하세요.</Notice>
+    <section className="limitations"><div><p className="eyebrow eyebrow-kr">해석</p><h2>숫자보다 먼저<br/>확인할 것</h2></div><ul><li>예산비중은 합계가 제한된 구성자료라 다른 영역의 증가가 해당 영역의 감소로 이어질 수 있습니다.</li><li>계획예산은 실제 집행액이 아니며 사업 통합·분리와 기록방식 변화가 증감에 포함될 수 있습니다.</li><li>구조환경 하락과 후행 예산비중 증가가 함께 나타났다고 해서 환경 악화가 예산 증가를 유발했다고 볼 수 없습니다.</li><li>2021년 제4차 기본계획부터 정책 목표와 분류 체계가 재편되어 시계열 비교에 주의가 필요합니다.</li></ul></section>
   </>
 }
 
@@ -321,8 +331,8 @@ function ProjectList() {
 
 function Download({ navigate }) {
   return <>
-    <PageHeader eyebrow="공개 데이터" title="데이터 다운로드" description="분석에 사용한 집계 데이터와 품질 정보를 버전 단위로 공개합니다."><div className="version-card"><span>최신 버전</span><strong>v0.1.0 · 부분 공개</strong><small>생성일 2026-07-27</small></div></PageHeader>
-    <Notice type="warn">계획예산·QA 집계 등 이 프로젝트가 직접 생성한 파일부터 우선 공개합니다. 21개 구조환경지표의 원자료 측정값이 포함된 정제본은 원출처별 재배포 조건 확인이 끝날 때까지 공개하지 않습니다.</Notice>
+    <PageHeader eyebrow="공개 데이터" title="데이터 다운로드" description="분석 화면에 사용한 지수·예산·회귀·군집 결과와 품질 정보를 내려받을 수 있습니다."><div className="version-card"><span>최신 버전</span><strong>v0.2.0 · 분석 결과 공개</strong><small>생성일 2026-08-08</small></div></PageHeader>
+    <Notice type="warn">구조환경·재정대응 지수와 분석 결과는 공개합니다. 구조환경지표의 원자료 측정값이 포함된 정제본은 원출처별 재배포 조건 확인이 끝날 때까지 공개하지 않습니다.</Notice>
     <section className="download-list">
       <div className="download-head"><span>파일</span><span>행 수</span><span>크기</span><span>상태</span></div>
       {files.map(x=>{
@@ -396,7 +406,7 @@ function PrivacyPolicy({ navigate }) {
 function Checksums({ navigate }) {
   return <>
     <PageHeader eyebrow="공개 데이터" title="체크섬" description="공개 파일의 무결성을 확인할 수 있는 SHA-256 체크섬입니다."><a className="primary" href="/SHA256SUMS.txt" download>SHA256SUMS.txt 다운로드 <span>↓</span></a></PageHeader>
-    <Notice>현재 공개된 4개 파일의 SHA-256 체크섬이 <code>SHA256SUMS.txt</code>에 기록되어 있습니다. 남은 파일은 공개되는 대로 추가됩니다.</Notice>
+    <Notice>현재 공개된 {files.filter(x=>x.status==='공개').length}개 파일의 SHA-256 체크섬이 <code>SHA256SUMS.txt</code>에 기록되어 있습니다.</Notice>
     <section className="checksum-list">
       {files.filter(x=>x.status==='공개').map(x=><article key={x.file}><strong>{x.file}</strong><code>{checksums[x.file]}</code></article>)}
     </section>
@@ -425,6 +435,25 @@ function Sources({ navigate }) {
   </>
 }
 
+function References({ navigate }) {
+  const groups = [...new Set(references.map(x => x.group))]
+  return <>
+    <PageHeader eyebrow="연구 문서" title="참고문헌" description={`분석의 이론적 배경과 방법론을 구성하는 국내외 문헌 ${references.length}건입니다.`} />
+    <Notice>참고문헌은 분석의 개념·방법론적 근거이며, 지표 산출에 직접 사용한 통계와 원자료는 <button className="text-button-inline" onClick={()=>navigate('sources')}>원출처 목록</button>에서 확인할 수 있습니다.</Notice>
+    {groups.map(group => <section className="source-group" key={group}>
+      <h3>{group}</h3>
+      <div className="reference-list">
+        {references.filter(x => x.group === group).map(x => <article className="reference-row" key={`${x.authors}-${x.year}-${x.title}`}>
+          <span className="reference-year">{x.year}</span>
+          <div><strong>{x.authors}</strong><p>{x.title}</p><span className="muted">{x.detail}</span></div>
+          {x.url ? <a href={x.url} target="_blank" rel="noreferrer">DOI 보기 ↗</a> : <span className="muted reference-no-link">—</span>}
+        </article>)}
+      </div>
+    </section>)}
+    <p className="back-link"><button className="text-button" onClick={()=>navigate('about')}>← 프로젝트 소개로 돌아가기</button></p>
+  </>
+}
+
 export default function App() {
   const getPage = () => location.hash.slice(1) || 'about'
   const [page, setPage] = useState(getPage)
@@ -440,7 +469,7 @@ export default function App() {
     return () => removeEventListener('click', onClick)
   }, [openGroup])
   const navigate = id => { location.hash = id }
-  const Current = { about: About, trends: Trends, structure: Structure, results: Results, quality: Quality, projects: ProjectList, download: Download, sources: Sources, license: DataLicense, 'content-license': ContentLicense, privacy: PrivacyPolicy, checksums: Checksums }[page] || About
+  const Current = { about: About, 'structural-analysis': StructuralIndexAnalysis, 'fiscal-analysis': FiscalResponseAnalysis, 'relationship-analysis': RelationshipAnalysis, trends: Trends, structure: Structure, results: Results, quality: Quality, projects: ProjectList, download: Download, sources: Sources, references: References, license: DataLicense, 'content-license': ContentLicense, privacy: PrivacyPolicy, checksums: Checksums }[page] || About
   return <ThemeContext.Provider value={theme}><div className="site-shell">
     <a href="#main-content" className="skip-link">본문 바로가기</a>
     <header className="topbar"><button className="brand" onClick={()=>navigate('about')} aria-label="Yumocha 홈"><span><img src="/logo.png" alt="" /></span><strong>Yumocha</strong></button>
@@ -473,6 +502,7 @@ export default function App() {
           <h3>관련 사이트</h3>
           <a href="https://github.com/JungYeoni/yumocha" target="_blank" rel="noreferrer">분석 저장소 ↗</a>
           <button onClick={()=>navigate('sources')}>원출처 목록</button>
+          <button onClick={()=>navigate('references')}>참고문헌</button>
         </div>
       </div>
       <div className="footer-policy">
