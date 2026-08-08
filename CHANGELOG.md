@@ -4,6 +4,7 @@
 
 ### 문서
 
+- CHANGELOG 자동 업데이트 [skip ci] ([5372622](https://github.com/JungYeoni/yumocha-web/commit/5372622dc7e06fcc05f7d603b82e3492fed84882))
 - CHANGELOG 자동 업데이트 [skip ci] ([8848223](https://github.com/JungYeoni/yumocha-web/commit/8848223a868730ac7cbcfe3fb339ed1b7f7c8227))
 - CHANGELOG 자동 업데이트 [skip ci] ([90922ee](https://github.com/JungYeoni/yumocha-web/commit/90922eee7df31fdacf420d4c0db84bee92bbed23))
 - CHANGELOG 자동 업데이트 [skip ci] ([106d942](https://github.com/JungYeoni/yumocha-web/commit/106d942565cab6b2ad9b48734f6ec94c04b134a9))
@@ -47,5 +48,9 @@
 - CHANGELOG 자동 업데이트 [skip ci] ([a066b56](https://github.com/JungYeoni/yumocha-web/commit/a066b56927b998c333d08266acb4f837fa0fd363))
 - CHANGELOG 자동 업데이트 [skip ci] ([f9d6617](https://github.com/JungYeoni/yumocha-web/commit/f9d6617858d961698c487347ed33e685e18b7c53))
 - CHANGELOG 자동 업데이트 [skip ci] ([8b716fe](https://github.com/JungYeoni/yumocha-web/commit/8b716fe2cc4c7404b92fa74cbd3f2996a34f1c2a))
+
+### 새 기능
+
+- 분석 콘텐츠와 공개 데이터 정비 ([fd98bd4](https://github.com/JungYeoni/yumocha-web/commit/fd98bd480927532057c58548cd603e91c94d276e))
 
 
