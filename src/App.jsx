@@ -27,16 +27,13 @@ function About({ navigate }) {
   return <>
     <section className="hero">
       <div>
-        <p className="eyebrow eyebrow-kr">지역의 조건을 읽는 데이터 프로젝트</p>
-        <h1>저출생 대응을<br/>예산 너머의 <em>조건</em>과<br/>함께 봅니다.</h1>
-        <p className="lede">2016–2024년 17개 시도의 구조적 여건과 시행계획상 계획예산을 연결해, 지역마다 다른 변화의 맥락을 탐색합니다.</p>
-        <div className="hero-actions"><button className="primary" onClick={() => navigate('trends')}>데이터 둘러보기 <span>→</span></button><button className="text-button" onClick={() => navigate('download')}>데이터 내려받기</button></div>
+        <p className="eyebrow eyebrow-kr">저출생 재정대응과 지역 출생환경의 정합성 및 출산율 간 관계 분석</p>
+        <h1>아이는 어떤 환경에서<br/><em>태어나는가?</em></h1>
+        <p className="lede hero-lede">지자체 저출생 대응 계획예산과 지역 구조환경지표를<br/>같은 <span>지역 × 연도 축에</span> 올려, 비교할 수 있는 형태로 만듭니다.</p>
+        <div className="hero-actions"><button className="primary" onClick={() => navigate('structural-analysis')}>분석 결과 보기</button><button className="text-button" onClick={() => navigate('download')}>데이터 내려받기</button></div>
       </div>
-      <div className="hero-visual" aria-label="17개 시도와 9개 연도를 나타내는 추상 시각화">
-        <span className="orbit orbit-one"/><span className="orbit orbit-two"/>
-        <div className="hero-number"><strong>17</strong><span>개 시도</span></div>
-        <div className="year-range"><span>2016</span><i/><span>2024</span></div>
-        <div className="dot-field">{Array.from({length: 17}, (_, i) => <i key={i} style={{'--i': i}} />)}</div>
+      <div className="hero-visual hero-image">
+        <img src="/project-overview.png" alt="대한민국 지역별 출산환경과 재정대응 데이터를 분석하는 모습" />
       </div>
     </section>
     <section className="summary-strip">
@@ -344,6 +341,7 @@ function Download({ navigate }) {
               {ready ? <a href={`/${x.file}`} download><strong>{x.name}</strong></a> : <strong>{x.name}</strong>}
               <code>{x.file}</code>
               <p>{x.description}</p>
+              <p className="download-use"><span>주요 활용</span>{x.use}</p>
               {x.sourceUrl && <a className="file-source-link" href={x.sourceUrl} target="_blank" rel="noreferrer">{x.sourceLabel} ↗</a>}
             </div>
           </div>

@@ -34,3 +34,14 @@
 .reference-row a{justify-self:end;color:var(--green);font-size:13px;text-decoration:none;border-bottom:1px solid currentColor;white-space:nowrap}
 .reference-no-link{justify-self:end}
 @media(max-width:768px){.reference-row{grid-template-columns:1fr;gap:6px}.reference-row a,.reference-no-link{justify-self:start}}
+.hero-visual.hero-image{height:auto;min-height:430px;border-radius:0;background:transparent;display:flex;align-items:center;justify-content:center;padding:0;overflow:visible}
+.hero-image img{display:block;width:115%;max-width:none;height:auto;object-fit:contain}
+@media(max-width:1024px){.hero-visual.hero-image{min-height:0;height:auto;margin-top:20px;padding:12px}.hero-image img{width:100%}}
+.hero-lede span{white-space:nowrap}
+@media(max-width:600px){.hero-lede br{display:none}}
+.hero-actions .primary{background:transparent;color:var(--green);border:0;border-bottom:1px solid transparent;border-radius:0;padding:8px 0}
+.hero-actions .primary:hover{background:transparent;color:var(--accent-hover);border-bottom-color:currentColor}
+.hero-actions .text-button{border-bottom-color:transparent}
+.hero-actions .text-button:hover{border-bottom-color:currentColor}
+.download-list article p.download-use{margin-top:8px;color:var(--muted-strong);font-size:12px;line-height:1.6}
+.download-use span{display:inline-block;margin-right:8px;color:var(--green);font-size:11px;font-weight:700}
