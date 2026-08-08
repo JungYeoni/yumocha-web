@@ -1750,6 +1750,7 @@ const actionPlanUrl = 'https://www.betterfuture.go.kr/front/policySpace/actionPl
 export const files = [
   { name: '분석 패널 CSV', file: 'analysis_panel.csv', description: '17개 시도의 2016–2024년 계획예산과 합계출산율을 한 행에 결합하고, 시차 비교에 필요한 전년도·후행 변수를 함께 담았습니다.', use: '지역별 예산 변화와 이후 출산율의 관계를 직접 분석할 때', rows: '153행', size: '12.6KB', status: '공개', sourceUrl: actionPlanUrl, sourceLabel: '시행계획 원문 보기' },
   { name: '계획예산 집계본', file: 'regional_budget_summary.csv', description: '시도와 연도별 저출생 대응 계획예산 총액, 세부사업 합계, 합계출산율을 정리한 기본 집계표입니다.', use: '지역·연도별 계획예산 규모를 빠르게 비교할 때', rows: '153행', size: '8.8KB', status: '공개', sourceUrl: actionPlanUrl, sourceLabel: '시행계획 원문 보기' },
+  { name: '검토완료 세부사업 목록', file: 'regional_project_list.csv', description: '2016–2024년 17개 시도의 세부사업 57,487건에 예산과 저출산·고령사회위원회 원분류, 유모차팀 검토완료 출생환경 대·세부영역 라벨을 결합했습니다. 출생환경 분류의 미분류는 0건입니다.', use: '지역·연도·사업별 예산을 검토완료 출생환경 분류와 함께 분석할 때', rows: '57,487행', size: '11MB', status: '공개', sourceUrl: actionPlanUrl, sourceLabel: '시행계획 원문 보기' },
   { name: '품질 플래그', file: 'quality_flags.csv', description: '원문 기재액과 세부사업 합계의 일치 여부, 결측 등 데이터 검증 결과를 항목별로 요약했습니다.', use: '분석 전에 데이터의 누락과 불일치 규모를 확인할 때', rows: '9행', size: '240B', status: '공개' },
   { name: '전국 합계출산율 추세', file: 'national_fertility_trend.csv', description: '통계청이 공표한 2016–2024년 전국 합계출산율을 연도별 한 행으로 정리했습니다.', use: '지역 결과와 전국 흐름을 비교하거나 기준선을 만들 때', rows: '9행', size: '125B', status: '공개' },
   { name: '구조환경 종합지수', file: 'analysis/structural_index.csv', description: '고용·주거·돌봄·건강 등 출산 관련 지역 여건을 하나의 0–100 상대점수로 종합한 시도·연도별 지수와 순위입니다.', use: '지역의 전반적인 출산환경 수준과 연도별 추세를 비교할 때', rows: '153행', size: '16KB', status: '공개' },
@@ -1763,13 +1764,13 @@ export const files = [
   { name: '예산–후행 TFR 모형', file: 'analysis/budget_tfr_models.csv', description: '당해 예산 또는 3개년 평균예산과 1–2년 뒤 합계출산율의 관계를 여러 모형의 계수·신뢰구간으로 정리했습니다.', use: '예산과 후행 출산율 사이의 방향·크기·불확실성을 비교할 때', rows: '44행', size: '16KB', status: '공개' },
   { name: '구조환경 군집별 예산–TFR 모형', file: 'analysis/budget_tfr_clusters.csv', description: '구조환경이 비슷한 시도를 3개 집단으로 나누고, 집단별 3개년 평균예산과 후행 합계출산율의 관계를 추정했습니다.', use: '지역 여건에 따라 예산–출산율 관계가 다르게 나타나는지 살펴볼 때', rows: '66행', size: '20KB', status: '공개' },
   { name: '시도별 구조환경 군집', file: 'analysis/region_clusters.csv', description: '17개 시도의 경제·가족생활·의료서비스·사회인식 대영역 점수와 2개·3개 군집 분류 결과를 담았습니다.', use: '유사한 구조환경을 가진 지역을 묶어 비교하거나 지도에 표시할 때', rows: '17행', size: '4KB', status: '공개' },
-  { name: '구조환경지표 검증본', file: 'structural_indicators.csv', description: '종합지수 산출에 사용한 21개 개별 지표의 측정값과 출처, 품질 확인 상태를 정리할 예정입니다.', use: '개별 지표 수준에서 산출 과정을 재현하고 검증할 때', rows: '연결 대기', size: '—', status: '준비 중' },
-  { name: '데이터 사전', file: 'DATA_DICTIONARY.xlsx', description: '공개 파일의 컬럼명, 정의, 단위, 값의 범위, 출처와 변환 방법을 파일별로 설명할 예정입니다.', use: 'CSV를 분석 도구로 불러오기 전 변수의 정확한 의미를 확인할 때', rows: '—', size: '—', status: '준비 중' },
+  { name: '구조환경지표 검증본', file: 'structural_indicators.csv', description: '종합지수 산출에 사용한 28개 개별 지표의 측정값과 출처, 품질 확인 상태를 정리할 예정입니다.', use: '개별 지표 수준에서 산출 과정을 재현하고 검증할 때', rows: '연결 대기', size: '—', status: '준비 중' },
 ]
 
 export const checksums = {
   'analysis_panel.csv': '7c5a25277216b1df16261b771d3d83f8223d620631baa3eb8d6265b6fce2e866',
   'regional_budget_summary.csv': 'b8e613ba815817bd6560a3faa2b9ae2b73ebb944b5fef4d25af7b031fde9c467',
+  'regional_project_list.csv': '869635aff504409941224bb52a8cd4bcfdd8ab92e61a9bb7d0ad4aa7245ca96d',
   'quality_flags.csv': 'a5c2ba524e032fb0a4c78e433840c9a4e671f7a30c161f78bef5d823be0c24d7',
   'national_fertility_trend.csv': '24787e561b613b801891041b69477eb5bb42b20e733e63e3a8abb08e802cb2b9',
   'analysis/structural_index.csv': 'f45263b642b54f4bef8974ba09e9bd8e11c6a2688a6d5cecf8b7ca5c7083613a',

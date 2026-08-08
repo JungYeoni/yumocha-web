@@ -29,7 +29,7 @@ function About({ navigate }) {
       <div>
         <p className="eyebrow eyebrow-kr">저출생 재정대응과 지역 출생환경의 정합성 및 출산율 간 관계 분석</p>
         <h1>아이는 어떤 환경에서<br/><em>태어나는가?</em></h1>
-        <p className="lede hero-lede">지자체 저출생 대응 계획예산과 지역 구조환경지표를<br/>같은 <span>지역 × 연도 축에</span> 올려, 비교할 수 있는 형태로 만듭니다.</p>
+        <p className="lede hero-lede">지역의 구조환경과 지방정부의 저출생 대응 계획예산을<br/>같은 <span>지역 × 연도 × 영역 축으로</span> 연결해 살펴봅니다.</p>
         <div className="hero-actions"><button className="primary" onClick={() => navigate('structural-analysis')}>분석 결과 보기</button><button className="text-button" onClick={() => navigate('download')}>데이터 내려받기</button></div>
       </div>
       <div className="hero-visual hero-image">
@@ -37,32 +37,40 @@ function About({ navigate }) {
       </div>
     </section>
     <section className="summary-strip">
-      <div><span>01</span><strong>9개년</strong><p>제3·4차 저출산·고령사회 기본계획 기간</p></div>
-      <div><span>02</span><strong>21개 지표</strong><p>인구·주거·고용·돌봄 등 구조환경지표</p></div>
-      <div><span>03</span><strong>계획예산</strong><p>실제 집행액이 아닌 시행계획 기재 예산</p></div>
+      <div><span>01</span><strong>17개 시도 × 9개년</strong><p>2016–2024년 지역 패널로 장기 변화를 비교</p></div>
+      <div><span>02</span><strong>구조환경 × 재정대응</strong><p>동일한 출생환경 영역체계로 두 자료를 연결</p></div>
+      <div><span>03</span><strong>시차적 관련성</strong><p>재정반응성과 이후 합계출산율의 관계를 탐색</p></div>
     </section>
     <section className="content-section two-col">
-      <div><p className="eyebrow eyebrow-kr">프로젝트 배경</p><h2>숫자 하나로는<br/>지역을 설명할 수 없으니까</h2></div>
+      <div><p className="eyebrow eyebrow-kr">분석 배경과 목적</p><h2>출산율과 예산 총액만으로는<br/>지역의 대응을 설명하기 어렵습니다</h2></div>
       <div className="prose">
-        <p>출산율의 변화는 한 해의 예산만으로 설명되지 않습니다. 일자리, 주거, 돌봄 접근성, 인구구조처럼 오랜 시간 누적된 지역의 조건과 재정대응을 같은 화면에서 살펴봅니다.</p>
-        <p>Yumocha는 정책의 <abbr title="원인과 결과를 밝히는 것이 아니라, 특정 조건에서 시차를 두고 함께 나타나는 경향을 뜻합니다.">인과효과를 단정하지 않고 조건부·시차적 연관성</abbr>을 탐색하며, 데이터의 빈틈과 해석의 한계도 함께 공개합니다.</p>
+        <p>출산은 임신·출산 단계의 직접 지원만으로 설명하기 어려운 다층적인 현상입니다. 고용과 소득, 주거비, 교육·돌봄비용, 의료 접근성, 일·가정 양립과 가족 내 돌봄분담 등 개인과 가구가 마주하는 여러 사회경제적 조건이 함께 작용합니다.</p>
+        <p>기존 연구는 지역의 출산환경 또는 저출생 대응예산을 각각 분석해 왔지만, 지역의 구조적 제약과 실제 재정배분이 서로 어떻게 대응하는지를 동일한 영역체계와 장기 시계열에서 연결해 살펴본 연구는 제한적이었습니다.</p>
+        <p>Yumocha는 지역별 <strong>구조환경의 수준과 변화</strong>, 이에 뒤따르는 <strong>재정대응</strong>, 그리고 이후 <strong>합계출산율과의 관계</strong>를 순차적으로 탐색합니다. 이를 통해 지방정부의 재정이 출산을 둘러싼 어떤 환경비용과 제약에 대응하고 있는지 살펴볼 수 있는 분석틀을 제시합니다.</p>
         <div className="verify-stats">
-          <div><strong>21개</strong><span>구조환경지표 원자료 전수 재계산 · 확정 오류 3건</span></div>
+          <div><strong>28개</strong><span>기존 21개 원자료 전수 대조 · 신규 7개 구축</span></div>
           <div><strong>153개</strong><span>지역·연도 계획예산 전수 검증 · 세부사업 결측 287건</span></div>
         </div>
         <details className="prose-detail">
           <summary>검증 방법 자세히 보기</summary>
-          <p>21개 구조환경지표의 산식과 지표 설계는 제주여성가족연구원이 먼저 만든 <a href="https://www.mediajeju.com/news/articleView.html?idxno=361517" target="_blank" rel="noreferrer">출산환경지수 연구</a>(2025, 관련 보도)를 참고했습니다. 공개된 값을 그대로 옮기지 않고 원자료 기준으로 전수 재계산해 대조했으며, 이 과정에서 산식이 다르게 적용된 사례 3건을 발견해 원자료 제공기관의 자료 수정으로 이어졌습니다. 남은 지표도 결측·확인 필요 여부를 함께 표시합니다.</p>
+          <p>28개 구조환경지표의 분류체계와 산식은 제주여성가족연구원이 먼저 만든 <a href="https://www.mediajeju.com/news/articleView.html?idxno=361517" target="_blank" rel="noreferrer">출산환경지수 연구</a>(2025, 관련 보도)를 참고했습니다. 기존 21개 지표는 원자료 기준으로 전수 재계산해 대조했으며, 이 과정에서 산식이 다르게 적용된 사례 3건을 발견해 원자료 제공기관의 자료 수정으로 이어졌습니다. 이후 7개 지표를 추가로 구축했으며, 지표별 결측과 확인 필요 여부도 함께 관리합니다.</p>
           <p>계획예산도 시행계획 원문과 세부사업 단위로 직접 대조합니다. 예산금액이 비어 있는 세부사업 287건을 확인했고, 중분류 소계와 세부사업 합계가 어긋나는 항목도 임의로 보정하지 않고 그대로 공개합니다. 자세한 내역은 <button className="text-button-inline" onClick={()=>navigate('quality')}>예산 정합성 검증</button> 페이지에서 확인할 수 있습니다.</p>
         </details>
       </div>
     </section>
     <section className="principles">
-      <article><span>구조환경</span><h3>구조환경</h3><p>지역 주민의 선택을 둘러싼 인구·경제·생활 인프라 조건을 21개 지표로 살펴봅니다.</p></article>
-      <article><span>재정대응</span><h3>재정대응</h3><p>시행계획에 기재된 당해연도 계획예산의 규모와 정책영역별 구성을 비교합니다.</p></article>
-      <article><span>시차적 연관성</span><h3>시차적 연관성</h3><p>재정대응 이후 1년·2년의 지표 변화가 어떤 관계를 보이는지 신중하게 해석합니다.</p></article>
+      <article><span>지역 여건 진단</span><h3>구조환경은 어떠한가</h3><p>고용·주거·돌봄·의료 등 28개 지표로 지역별 출생환경의 상대적 수준과 장기 변화를 살펴봅니다.</p></article>
+      <article><span>재정배분 점검</span><h3>재정은 어디에 대응하는가</h3><p>지역의 구조환경 변화와 영역별 계획예산을 연결해 어떤 제약에 재정이 집중되는지 확인합니다.</p></article>
+      <article><span>조건부 관계 탐색</span><h3>이후 출산율과 어떤 관계인가</h3><p>지역·연도 차이와 시간적 선후관계를 고려해 재정대응과 이후 합계출산율의 조건부 관련성을 탐색합니다.</p></article>
     </section>
-    <Notice type="warn">본 사이트의 예산은 실제 집행액이 아닌 <strong>시행계획상 계획예산</strong>입니다. 분석 결과는 인과효과가 아니라 관찰자료에 기반한 조건부 연관성입니다.</Notice>
+    <section className="intro-audience">
+      <div><p className="eyebrow eyebrow-kr">활용 안내</p><h2>지역의 여건과 정책대응을<br/>같은 기준으로 확인합니다</h2></div>
+      <div className="intro-audience-grid">
+        <article><strong>정책관리자·지방자치단체</strong><p>개선이 필요한 영역과 기존 사업의 집중 분야를 함께 확인해 신규사업 발굴, 사업 조정, 예산배분 우선순위 검토와 연도별 모니터링의 기초자료로 활용할 수 있습니다.</p></article>
+        <article><strong>지역 주민</strong><p>거주지역의 출산·양육 환경과 지방정부의 영역별 재정투입을 다른 지역 및 과거 시점과 비교해 확인할 수 있습니다.</p></article>
+      </div>
+    </section>
+    <Notice type="warn">본 사이트의 예산은 실제 집행액이 아닌 <strong>시행계획상 계획예산</strong>입니다. 관측자료에 기반한 분석이므로 재정지출의 인과효과가 아니라 시간적 선후관계와 지역·연도 차이를 고려한 <strong>조건부 관련성과 재정반응성</strong>으로 해석해야 합니다.</Notice>
   </>
 }
 
@@ -105,7 +113,7 @@ function Trends() {
     </div>
     {meta.caveat
       ? <Notice type="warn">{meta.caveat}</Notice>
-      : <Notice>21개 구조환경지표는 원자료를 직접 재현해 재정팀 산출값과 전수 대조한 뒤 공개합니다. 격년·비정기 조사 지표는 결측값을 0으로 대체하거나 선으로 잇지 않고 그대로 비워 둡니다.</Notice>}
+      : <Notice>28개 구조환경지표는 기존 21개 지표의 원자료 전수 대조와 신규 7개 지표 구축·검증을 거쳐 공개합니다. 격년·비정기 조사 지표는 결측값을 0으로 대체하거나 선으로 잇지 않고 그대로 비워 둡니다.</Notice>}
   </>
 }
 
@@ -127,7 +135,7 @@ function Structure() {
   }))
   return <>
     <PageHeader eyebrow="현황" title="재정 현황" description="지역의 구조적 여건과 계획예산의 규모·구성을 나란히 비교합니다."/>
-    <div className="metric-row"><Metric label="분석 지역" value="17" sub="전국 광역 시도"/><Metric label="구조환경지표" value="21" sub="원자료 검증 완료"/><Metric label="예산 기준" value="당해예산" sub="전년도예산 제외"/><Metric label="데이터 기간" value="9년" sub="2016–2024"/></div>
+    <div className="metric-row"><Metric label="분석 지역" value="17" sub="전국 광역 시도"/><Metric label="구조환경지표" value="28" sub="검증·구축 완료"/><Metric label="예산 기준" value="당해예산" sub="전년도예산 제외"/><Metric label="데이터 기간" value="9년" sub="2016–2024"/></div>
     <section className="panel chart-panel">
       <div className="panel-head"><div><p className="eyebrow eyebrow-kr">계획예산</p><h2>지역별 계획예산 비교</h2></div><div className="panel-head-note"><p className="muted">단위: 억 원 · 구조 검증용 샘플</p><a className="text-button-inline" href="https://www.betterfuture.go.kr/front/policySpace/actionPlan.do" target="_blank" rel="noreferrer">시행계획 원문 보기 ↗</a></div></div>
       <Chart tall ariaLabel="지역별 계획예산 막대 차트" data={[{type:'bar', orientation:'h', y:sorted.map(x=>x.region).reverse(), x:sorted.map(x=>x.budget).reverse(), marker:{color:sorted.map((_,i)=>`rgba(${c.accentRgb}, ${.42 + i/40})`).reverse()}, hovertemplate:'%{y}<br>%{x:,.0f}억 원<extra></extra>'}]} layout={{height:500, margin:{...plotLayout.margin,l:45}, xaxis:{tickformat:',', fixedrange:true}, yaxis:{fixedrange:true}, showlegend:false}}/>
@@ -330,7 +338,7 @@ function ProjectList() {
     (selectedRegions.length === 0 || selectedRegions.includes(r.region)) &&
     (selectedYears.length === 0 || selectedYears.includes(r.year)) &&
     (officialClasses.length === 0 || officialClasses.includes(r.officialClass)) &&
-    (environmentClasses.length === 0 || environmentClasses.some(value => value === '미분류' ? !r.environmentMinor : r.environmentMinor === value)) &&
+    (environmentClasses.length === 0 || environmentClasses.includes(r.environmentMinor)) &&
     (search === '' || r.name.includes(search))
   ) : []
   const officialOptions = rows ? [...new Set(rows.filter(r => selectedYears.length === 0 || selectedYears.includes(r.year)).map(r => r.officialClass).filter(Boolean))].sort() : []
@@ -345,10 +353,10 @@ function ProjectList() {
       <FilterMultiSelect label="지역" note="복수 선택 가능" options={regions} selected={selectedRegions} onChange={setSelectedRegions}/>
       <FilterMultiSelect label="연도" note="복수 선택 가능" options={years} selected={selectedYears} onChange={values=>{setSelectedYears(values);setOfficialClasses([])}}/>
       <FilterMultiSelect label="저출산·고령사회위원회 분류" note="복수 선택 가능" options={officialOptions} selected={officialClasses} onChange={setOfficialClasses}/>
-      <FilterMultiSelect label="출생환경지표 분류" note="유모차팀, 2026 · 복수 선택 가능" options={[...environmentOptions,'미분류']} selected={environmentClasses} onChange={setEnvironmentClasses}/>
+      <FilterMultiSelect label="출생환경지표 분류" note="유모차팀, 2026 · 복수 선택 가능" options={environmentOptions} selected={environmentClasses} onChange={setEnvironmentClasses}/>
       <label>사업명 검색<input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="사업명을 입력하세요"/></label>
     </div>
-    <p className="muted project-filter-guide">저출산·고령사회위원회 분류는 각 연도 시행계획 원문을 따릅니다. 2016–2018년, 2019–2020년, 2021–2024년은 해당 기간 기본계획의 분류체계가 적용되어 연도 간 분류명이 다를 수 있습니다. 출생환경지표 분류는 유모차팀이 세부사업명과 주요내용을 기준으로 분류한 단일 영역이며, 현재 {rows ? rows.filter(r=>r.environmentMinor).length.toLocaleString() : '—'}건이 연결되어 있습니다.</p>
+    <p className="muted project-filter-guide">저출산·고령사회위원회 분류는 각 연도 시행계획 원문을 따릅니다. 2016–2018년, 2019–2020년, 2021–2024년은 해당 기간 기본계획의 분류체계가 적용되어 연도 간 분류명이 다를 수 있습니다. 출생환경지표 분류는 유모차팀이 세부사업명과 주요내용을 기준으로 전수 검토한 단일 영역이며, 사업목록 57,487건 모두 분류가 완료되어 있습니다.</p>
     {!rows && !error && <p className="muted">불러오는 중입니다… (약 8MB · 57,000여 건)</p>}
     {error && <Notice type="warn">목록을 불러오지 못했습니다. 새로고침해 주세요.</Notice>}
     {rows && <>
@@ -356,7 +364,7 @@ function ProjectList() {
       <section className="project-table">
         <div className="project-row project-head"><span>연도</span><span>지역</span><span>위원회 중분류</span><span>출생환경 분류</span><span>세부사업명</span><span>당해예산</span><span>증감률</span></div>
         {pageRows.map((r, i) => <div className="project-row" key={i}>
-          <span>{r.year}</span><span>{r.region}</span><span>{r.officialClass}</span><span>{r.environmentMinor || '미분류'}</span><span>{r.name}</span>
+          <span>{r.year}</span><span>{r.region}</span><span>{r.officialClass}</span><span>{r.environmentMinor}</span><span>{r.name}</span>
           <span>{r.cur != null ? r.cur.toLocaleString() : ''}</span>
           <span className={r.diffPct > 0 ? 'up' : r.diffPct < 0 ? 'down' : ''}>{r.diffPct != null ? `${r.diffPct > 0 ? '+' : ''}${r.diffPct}%` : ''}</span>
         </div>)}

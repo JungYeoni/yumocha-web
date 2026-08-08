@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Chart, Metric, Notice, PageHeader, plotLayout } from './components'
 import { regions } from './data'
 import { themeColors, useTheme } from './theme'
+import { KeywordAnalysisSection } from './keywordAnalysis'
 
 const files = {
   structural: '/analysis/structural_index.csv', structuralSub: '/analysis/structural_subcategory.csv', structuralTfr: '/analysis/structural_tfr.csv',
@@ -110,6 +111,7 @@ function BirthEnvironmentAnalysis({ section }) {
     <h2 className="analysis-section-title">1인당 재정대응 예산액 log1p</h2>
     <div className="results-grid"><section className="panel"><h2>전체예산 측정값과 추세</h2><Chart interpretation="20–39세 인구 1인당 실질 계획예산의 장기 추세입니다. 계획예산은 집행액·결산액이 아니며, log1p 값의 변화는 원 단위의 동일한 증감폭을 의미하지 않습니다." data={[{x:ft.map(x=>x['연도']),y:ft.map(x=>n(x['log1p_20_39세_1인당_실질예산'])),type:'scatter',mode:'lines+markers',line:{color:c.accent}}]} layout={{height:320,yaxis:{title:'log1p 20–39세 1인당 예산'}}}/><DataTable rows={ft} columns={[{key:'연도',label:'연도'},{key:'20_39세_1인당_실질예산_원',label:'1인당 실질예산',format:v=>`${Math.round(n(v)).toLocaleString()}원`},{key:'log1p_20_39세_1인당_실질예산',label:'log1p',format:v=>n(v).toFixed(3)}]}/></section>
     <section className="panel"><h2>세부영역별 측정값과 추세</h2><Chart interpretation={`현재 선택한 ‘${domain}’의 1인당 실질 계획예산을 log1p로 변환한 추세입니다. 선의 색은 아래 세부영역 구성 차트에서 같은 영역에 사용한 색과 같습니다.`} data={[{x:fsDomain.map(x=>x['연도']),y:fsDomain.map(x=>n(x['log1p_인구1인당_실질예산'])),type:'scatter',mode:'lines+markers',line:{color:selectedDomainColor,width:3},marker:{color:selectedDomainColor,size:7},connectgaps:false}]} layout={{height:320,yaxis:{title:'log1p 1인당 실질예산'}}}/><DataTable rows={fsDomain} columns={[{key:'연도',label:'연도'},{key:'인구1인당_실질예산_원',label:'1인당 실질예산',format:v=>`${Math.round(n(v)).toLocaleString()}원`},{key:'log1p_인구1인당_실질예산',label:'log1p',format:v=>n(v).toFixed(3)}]}/></section></div>
+    <KeywordAnalysisSection />
     </>}
   </>
 }
