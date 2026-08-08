@@ -45,3 +45,23 @@
 .hero-actions .text-button:hover{border-bottom-color:currentColor}
 .download-list article p.download-use{margin-top:8px;color:var(--muted-strong);font-size:12px;line-height:1.6}
 .download-use span{display:inline-block;margin-right:8px;color:var(--green);font-size:11px;font-weight:700}
+.filter-bar label small,.filter-field>small{font-size:10px;letter-spacing:0;color:rgba(255,255,255,.7)}
+.filter-field{position:relative;display:flex;flex-direction:column;gap:7px;color:rgba(255,255,255,.75);font-size:13px;letter-spacing:.03em;min-width:260px}
+.filter-multiselect{position:relative;color:#fff;letter-spacing:0}
+.filter-multiselect summary{list-style:none;min-height:38px;display:flex;align-items:center;justify-content:space-between;background:#134fc4;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:9px 34px 9px 12px;color:#fff;cursor:pointer;font-size:13px}
+.filter-multiselect summary::-webkit-details-marker{display:none}
+.filter-multiselect summary:after{content:'⌄';position:absolute;right:12px;font-size:14px}
+.filter-multiselect[open] summary:after{transform:rotate(180deg)}
+.filter-options{position:absolute;z-index:15;top:calc(100% + 6px);left:0;width:min(360px,80vw);max-height:280px;overflow:auto;background:var(--surface);border:1px solid var(--line);box-shadow:0 10px 24px rgba(0,0,0,.18);padding:8px;color:var(--ink)}
+.filter-options button{width:100%;border:0;background:var(--surface-alt);color:var(--green);padding:9px 10px;text-align:left;font-size:12px;font-weight:700}
+.filter-options label{display:grid;grid-template-columns:18px 1fr;gap:8px;align-items:start;padding:8px 6px;color:var(--ink);font-size:12px;letter-spacing:0;cursor:pointer}
+.filter-options label:hover{background:var(--surface-alt)}
+.filter-options input{margin:2px 0 0;accent-color:var(--green)}
+.project-filter-bar{display:grid;grid-template-columns:minmax(110px,.8fr) minmax(110px,.8fr) minmax(220px,1.5fr) minmax(150px,1fr) minmax(170px,1.15fr);align-items:end;width:100%}
+.project-filter-bar>label,.project-filter-bar>.filter-field{min-width:0;width:100%}
+.project-filter-bar select,.project-filter-bar input[type=text]{min-width:0;width:100%}
+@media(max-width:900px){.project-filter-bar{grid-template-columns:1fr 1fr}.project-filter-bar>label:last-child{grid-column:1/-1}}
+@media(max-width:600px){.project-filter-bar{grid-template-columns:1fr}.project-filter-bar>label:last-child{grid-column:auto}}
+.project-filter-guide{margin:-8px 0 24px}
+.project-row{grid-template-columns:58px 54px 135px 130px minmax(220px,1fr) 90px 70px}
+@media(max-width:1024px){.project-table{overflow-x:auto}.project-row{min-width:900px}}

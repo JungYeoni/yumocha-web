@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Chart, Metric, Notice, PageHeader, plotLayout } from './components'
 import { budgetByYear, budgetRows, checksums, cpi, files, indicators, nationalFertility, officialCategory2024, officialCategoryLabels2024, qaDetailRows, qaRows, references, regions, responseByDomain, responseByRegion, sources, structuralIndicators, trendRows, years } from './data'
 import { ThemeContext, useTheme, themeColors } from './theme'
@@ -262,11 +262,49 @@ function pageWindow(current, total, span = 2) {
   return pages
 }
 
+function normalizeOfficialClass(year, value) {
+  const text = (value || '').replace(/\([^)]*(?:사업|과제|공통|자체)[^)]*\)/g, '').replace(/^[ⅠⅡⅢⅣIVX\d.\s]+/, '').replace(/[·･․]/g, ' ').replace(/\s+/g, ' ').trim()
+  if (+year <= 2018) {
+    if (/출산이 행복한/.test(text)) return '출산이 행복한 지역 조성'
+    if (/안정된 생활.*건강한 노년/.test(text)) return '안정된 생활·건강한 노년·활기찬 노후'
+    if (/대응\s*기반|대응기반/.test(text)) return '저출산·고령사회 대응기반 강화'
+    if (/고령/.test(text)) return '고령사회 대책'
+    if (/저출산/.test(text)) return '저출산 대책'
+  }
+  if (+year <= 2020) {
+    if (/함께 돌보고 함께 일하는/.test(text)) return '함께 돌보고 함께 일하는 사회'
+    if (/행복한 노후/.test(text)) return '함께 만들어가는 행복한 노후'
+    if (/인구.*변화|인구구조/.test(text)) return '인구구조 변화 적극 대비'
+  }
+  if (/함께 일하고 함께 돌보는/.test(text)) return '함께 일하고 함께 돌보는 사회'
+  if (/건강하고 능동적인 고령사회/.test(text)) return '건강하고 능동적인 고령사회'
+  if (/모두의 역량이 고루 발휘/.test(text)) return '모두의 역량이 고루 발휘되는 사회'
+  if (/인구구조 변화에 대한 적응/.test(text)) return '인구구조 변화에 대한 적응'
+  return text
+}
+
+function FilterMultiSelect({ label, note, options, selected, onChange }) {
+  const detailsRef = useRef(null)
+  useEffect(() => {
+    const close = event => {
+      if (event.type === 'keydown' && event.key !== 'Escape') return
+      if (event.type === 'pointerdown' && detailsRef.current?.contains(event.target)) return
+      if (detailsRef.current) detailsRef.current.open = false
+    }
+    document.addEventListener('pointerdown', close)
+    document.addEventListener('keydown', close)
+    return () => { document.removeEventListener('pointerdown', close); document.removeEventListener('keydown', close) }
+  }, [])
+  return <div className="filter-field"><span>{label}</span>{note && <small>{note}</small>}<details ref={detailsRef} className="filter-multiselect"><summary>{selected.length ? `${selected.length}개 선택` : '전체'}</summary><div className="filter-options"><button type="button" onClick={()=>onChange([])}>전체 보기</button>{options.map(x=><label key={x}><input type="checkbox" checked={selected.includes(String(x))} onChange={e=>onChange(e.target.checked?[...selected,String(x)]:selected.filter(value=>value!==String(x)))}/><span>{x}</span></label>)}</div></details></div>
+}
+
 function ProjectList() {
   const [rows, setRows] = useState(null)
   const [error, setError] = useState(false)
-  const [region, setRegion] = useState('전체')
-  const [year, setYear] = useState('전체')
+  const [selectedRegions, setSelectedRegions] = useState([])
+  const [selectedYears, setSelectedYears] = useState([])
+  const [officialClasses, setOfficialClasses] = useState([])
+  const [environmentClasses, setEnvironmentClasses] = useState([])
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
   const perPage = 50
@@ -279,37 +317,46 @@ function ProjectList() {
         setRows(parsed.slice(1).map(r => ({
           year: r[0], region: r[1], major: r[2], minor: r[3], type: r[4], name: r[5],
           cur: r[6] ? +r[6] : null, prev: r[7] ? +r[7] : null, diffAmt: r[8] ? +r[8] : null, diffPct: r[9] ? +r[9] : null,
+          environmentMajor: r[10] || '', environmentMinor: r[11] || '',
+          officialClass: normalizeOfficialClass(r[0], r[3]),
         })))
       })
       .catch(() => setError(true))
   }, [])
 
-  useEffect(() => { setPage(1) }, [region, year, search])
+  useEffect(() => { setPage(1) }, [selectedRegions, selectedYears, officialClasses, environmentClasses, search])
 
   const filtered = rows ? rows.filter(r =>
-    (region === '전체' || r.region === region) &&
-    (year === '전체' || r.year === String(year)) &&
+    (selectedRegions.length === 0 || selectedRegions.includes(r.region)) &&
+    (selectedYears.length === 0 || selectedYears.includes(r.year)) &&
+    (officialClasses.length === 0 || officialClasses.includes(r.officialClass)) &&
+    (environmentClasses.length === 0 || environmentClasses.some(value => value === '미분류' ? !r.environmentMinor : r.environmentMinor === value)) &&
     (search === '' || r.name.includes(search))
   ) : []
+  const officialOptions = rows ? [...new Set(rows.filter(r => selectedYears.length === 0 || selectedYears.includes(r.year)).map(r => r.officialClass).filter(Boolean))].sort() : []
+  const environmentOptions = rows ? [...new Set(rows.map(r => r.environmentMinor).filter(Boolean))].sort() : []
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage))
   const pageRows = filtered.slice((page - 1) * perPage, page * perPage)
 
   return <>
     <PageHeader eyebrow="분석" title="사업 목록" description="시행계획 원문에서 추출한 지역·연도별 세부사업 목록입니다."><a className="primary" href="/regional_project_list.csv" download>CSV로 다운로드 <span>↓</span></a></PageHeader>
-    <Notice type="warn">이 목록은 각 지자체가 개별 발간한 시행계획 PDF를 파싱해 정제한 세부사업명·예산입니다. 원문 발간처가 별도 재사용 허가(공공누리 등)를 명시하지 않아, 재배포 조건이 확인되지 않은 자료이니 참고용으로만 활용해 주세요. 증감율은 이번 연도 문서에 다시 적힌 전년도예산 대비 변화율로, 전년도 문서 자체의 당해예산과 다르거나 사업명이 바뀌거나 신설·폐지된 경우 결측되거나 왜곡될 수 있습니다.</Notice>
-    <div className="filter-bar">
-      <label>지역<select value={region} onChange={e => setRegion(e.target.value)}><option>전체</option>{regions.map(x => <option key={x}>{x}</option>)}</select></label>
-      <label>연도<select value={year} onChange={e => setYear(e.target.value)}><option>전체</option>{years.map(y => <option key={y}>{y}</option>)}</select></label>
+    <Notice type="warn">이 목록은 각 지자체가 개별 발간한 시행계획 PDF를 파싱해 정제한 세부사업명·예산입니다. 원문 발간처가 별도 재사용 허가(공공누리 등)를 명시하지 않아 참고용으로만 활용해 주세요. 증감률은 전년도 시행계획과 비교한 값이 아니라, 동일 연도 시행계획에 각 세부사업의 전년도 예산으로 표기된 금액을 기준으로 계산했습니다. 사업명 변경·신설·폐지 또는 원문 기재 방식에 따라 결측되거나 왜곡될 수 있습니다.</Notice>
+    <div className="filter-bar project-filter-bar">
+      <FilterMultiSelect label="지역" note="복수 선택 가능" options={regions} selected={selectedRegions} onChange={setSelectedRegions}/>
+      <FilterMultiSelect label="연도" note="복수 선택 가능" options={years} selected={selectedYears} onChange={values=>{setSelectedYears(values);setOfficialClasses([])}}/>
+      <FilterMultiSelect label="저출산·고령사회위원회 분류" note="복수 선택 가능" options={officialOptions} selected={officialClasses} onChange={setOfficialClasses}/>
+      <FilterMultiSelect label="출생환경지표 분류" note="유모차팀, 2026 · 복수 선택 가능" options={[...environmentOptions,'미분류']} selected={environmentClasses} onChange={setEnvironmentClasses}/>
       <label>사업명 검색<input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="사업명을 입력하세요"/></label>
     </div>
+    <p className="muted project-filter-guide">저출산·고령사회위원회 분류는 각 연도 시행계획 원문을 따릅니다. 2016–2018년, 2019–2020년, 2021–2024년은 해당 기간 기본계획의 분류체계가 적용되어 연도 간 분류명이 다를 수 있습니다. 출생환경지표 분류는 유모차팀이 세부사업명과 주요내용을 기준으로 분류한 단일 영역이며, 현재 {rows ? rows.filter(r=>r.environmentMinor).length.toLocaleString() : '—'}건이 연결되어 있습니다.</p>
     {!rows && !error && <p className="muted">불러오는 중입니다… (약 8MB · 57,000여 건)</p>}
     {error && <Notice type="warn">목록을 불러오지 못했습니다. 새로고침해 주세요.</Notice>}
     {rows && <>
-      <p className="muted">총 {filtered.length.toLocaleString()}건{region !== '전체' && ` · ${region}`}{year !== '전체' && ` · ${year}년`} · 단위: 백만 원</p>
+      <p className="muted">총 {filtered.length.toLocaleString()}건{selectedRegions.length > 0 && ` · 지역 ${selectedRegions.length}개`}{selectedYears.length > 0 && ` · 연도 ${selectedYears.length}개`} · 단위: 백만 원</p>
       <section className="project-table">
-        <div className="project-row project-head"><span>연도</span><span>지역</span><span>중분류</span><span>세부사업명</span><span>당해예산</span><span>증감율</span></div>
+        <div className="project-row project-head"><span>연도</span><span>지역</span><span>위원회 중분류</span><span>출생환경 분류</span><span>세부사업명</span><span>당해예산</span><span>증감률</span></div>
         {pageRows.map((r, i) => <div className="project-row" key={i}>
-          <span>{r.year}</span><span>{r.region}</span><span>{r.minor}</span><span>{r.name}</span>
+          <span>{r.year}</span><span>{r.region}</span><span>{r.officialClass}</span><span>{r.environmentMinor || '미분류'}</span><span>{r.name}</span>
           <span>{r.cur != null ? r.cur.toLocaleString() : ''}</span>
           <span className={r.diffPct > 0 ? 'up' : r.diffPct < 0 ? 'down' : ''}>{r.diffPct != null ? `${r.diffPct > 0 ? '+' : ''}${r.diffPct}%` : ''}</span>
         </div>)}
