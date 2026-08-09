@@ -356,7 +356,7 @@ function ProjectList() {
       <FilterMultiSelect label="출생환경지표 분류" note="유모차팀, 2026 · 복수 선택 가능" options={environmentOptions} selected={environmentClasses} onChange={setEnvironmentClasses}/>
       <label>사업명 검색<input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="사업명을 입력하세요"/></label>
     </div>
-    <p className="muted project-filter-guide">저출산·고령사회위원회 분류는 각 연도 시행계획 원문을 따릅니다. 2016–2018년, 2019–2020년, 2021–2024년은 해당 기간 기본계획의 분류체계가 적용되어 연도 간 분류명이 다를 수 있습니다. 출생환경지표 분류는 유모차팀이 세부사업명과 주요내용을 기준으로 전수 검토한 단일 영역이며, 사업목록 57,487건 모두 분류가 완료되어 있습니다.</p>
+    <p className="muted project-filter-guide">저출산·고령사회위원회 분류는 각 연도 시행계획 원문을 따릅니다. 2016–2018년, 2019–2020년, 2021–2024년은 해당 기간 기본계획의 분류체계가 적용되어 연도 간 분류명이 다를 수 있습니다. 출생환경지표 분류는 유모차팀이 세부사업명과 주요내용을 기준으로 전수 검토한 단일 영역이며, 소계와 미분류를 제외한 사업목록 57,978건 모두 분류가 완료되어 있습니다.</p>
     {!rows && !error && <p className="muted">불러오는 중입니다… (약 8MB · 57,000여 건)</p>}
     {error && <Notice type="warn">목록을 불러오지 못했습니다. 새로고침해 주세요.</Notice>}
     {rows && <>

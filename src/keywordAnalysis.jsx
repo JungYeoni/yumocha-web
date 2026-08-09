@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Notice } from './components'
 
 const views = {
@@ -7,6 +7,7 @@ const views = {
     title: '세부사업명에서 두드러진 핵심어',
     description: '사업의 명칭에 반복적으로 드러나는 정책 대상과 지원 수단을 세부영역별로 살펴봅니다.',
     src: '/analysis/keyword-business-name-wordcloud.png',
+    data: '/analysis/keyword-business-name.csv',
     alt: '2016년부터 2024년까지 세부영역별 세부사업명 TF-IDF 핵심어 워드클라우드',
   },
   content: {
@@ -14,13 +15,37 @@ const views = {
     title: '주요내용에서 두드러진 핵심어',
     description: '사업 설명에 나타난 실제 지원 대상과 제공 방식의 언어적 특징을 세부영역별로 살펴봅니다.',
     src: '/analysis/keyword-main-content-wordcloud.png',
+    data: '/analysis/keyword-main-content.csv',
     alt: '2016년부터 2024년까지 세부영역별 주요내용 TF-IDF 핵심어 워드클라우드',
   },
 }
 
 export function KeywordAnalysisSection() {
   const [view, setView] = useState('name')
+  const [keywordRows, setKeywordRows] = useState([])
+  const [subarea, setSubarea] = useState('')
   const current = views[view]
+  const subareas = [...new Set(keywordRows.map(row => row.subarea))]
+  const selectedRows = keywordRows.filter(row => row.subarea === subarea)
+  const scores = selectedRows.map(row => row.score)
+  const minScore = Math.min(...scores)
+  const maxScore = Math.max(...scores)
+
+  useEffect(() => {
+    let active = true
+    fetch(current.data)
+      .then(response => response.text())
+      .then(text => {
+        if (!active) return
+        const rows = text.trim().split(/\r?\n/).slice(1).map(line => {
+          const [area, rank, word, score, documents, totalDocuments] = line.split(',')
+          return { subarea: area, rank: Number(rank), word, score: Number(score), documents: Number(documents), totalDocuments: Number(totalDocuments) }
+        })
+        setKeywordRows(rows)
+        setSubarea(rows[0]?.subarea || '')
+      })
+    return () => { active = false }
+  }, [current.data])
 
   return <>
     <h2 className="analysis-section-title">저출생 대응 세부사업 핵심어</h2>
@@ -56,6 +81,25 @@ export function KeywordAnalysisSection() {
           <img src={current.src} alt={current.alt} loading="lazy" />
         </a>
         <p className="keyword-caption">각 영역 안에서 글자가 클수록 그 영역의 사업 문서에서 상대적으로 특징적인 단어입니다. 단어의 정확한 점수나 영역 간 크기를 직접 비교하는 용도로는 사용하지 않습니다.</p>
+
+        <section className="keyword-detail" aria-label={`${current.label} 세부영역별 핵심어 탐색`}>
+          <div className="keyword-detail-head">
+            <div><p className="eyebrow eyebrow-kr">세부영역 탐색</p><h3>영역을 선택해 핵심어를 자세히 보세요</h3><p>전체 이미지와 같은 결과를 영역별 워드클라우드와 순위 목록으로 나누어 보여줍니다.</p></div>
+            <label>세부영역<select value={subarea} onChange={event => setSubarea(event.target.value)}>{subareas.map(area => <option key={area}>{area}</option>)}</select></label>
+          </div>
+          <div className="keyword-detail-grid">
+            <div className="keyword-cloud" aria-label={`${subarea} 워드클라우드`}>
+              {selectedRows.map((row, index) => {
+                const ratio = maxScore === minScore ? 0.5 : (row.score - minScore) / (maxScore - minScore)
+                return <span key={row.word} className={`keyword-tone-${index % 5}`} style={{ fontSize: `${17 + ratio * 31}px`, fontWeight: 550 + Math.round(ratio * 250) }} title={`평균 TF-IDF ${row.score.toFixed(4)}`}>{row.word}</span>
+              })}
+            </div>
+            <div className="keyword-list-wrap">
+              <h4>{subarea} 상위 핵심어</h4>
+              <ol className="keyword-list">{selectedRows.map(row => <li key={row.word}><span>{row.word}</span><small>{row.documents.toLocaleString()}개 문서</small></li>)}</ol>
+            </div>
+          </div>
+        </section>
       </article>
     </section>
 
