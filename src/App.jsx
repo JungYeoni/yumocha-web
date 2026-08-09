@@ -6,14 +6,14 @@ import { FiscalResponseAnalysis, RelationshipAnalysis, StructuralIndexAnalysis }
 
 const pages = [
   { id: 'about', label: '프로젝트 소개' },
+  { label: '활용 데이터', children: [
+    { id: 'projects', label: '저출생 대응 예산사업 목록' },
+    { id: 'quality', label: '예산 정합성 검증' },
+  ] },
   { label: '분석 결과', children: [
     { id: 'structural-analysis', label: '구조환경지수 분석' },
     { id: 'fiscal-analysis', label: '재정대응 분석' },
     { id: 'relationship-analysis', label: '재정지출–출산율 관계' },
-  ] },
-  { label: '데이터 검증', children: [
-    { id: 'quality', label: '예산 정합성 검증' },
-    { id: 'projects', label: '사업 목록' },
   ] },
   { label: '연구 문서', children: [
     { id: 'sources', label: '원출처 목록' },
@@ -347,7 +347,7 @@ function ProjectList() {
   const pageRows = filtered.slice((page - 1) * perPage, page * perPage)
 
   return <>
-    <PageHeader eyebrow="분석" title="사업 목록" description="시행계획 원문에서 추출한 지역·연도별 세부사업 목록입니다."><a className="primary" href="/regional_project_list.csv" download>CSV로 다운로드 <span>↓</span></a></PageHeader>
+    <PageHeader eyebrow="활용 데이터" title="저출생 대응 예산사업 목록" description="시행계획 원문에서 추출한 지역·연도별 세부사업 목록입니다."><a className="primary" href="/regional_project_list.csv" download>CSV로 다운로드 <span>↓</span></a></PageHeader>
     <Notice type="warn">이 목록은 각 지자체가 개별 발간한 시행계획 PDF를 파싱해 정제한 세부사업명·예산입니다. 원문 발간처가 별도 재사용 허가(공공누리 등)를 명시하지 않아 참고용으로만 활용해 주세요. 증감률은 전년도 시행계획과 비교한 값이 아니라, 동일 연도 시행계획에 각 세부사업의 전년도 예산으로 표기된 금액을 기준으로 계산했습니다. 사업명 변경·신설·폐지 또는 원문 기재 방식에 따라 결측되거나 왜곡될 수 있습니다.</Notice>
     <div className="filter-bar project-filter-bar">
       <FilterMultiSelect label="지역" note="복수 선택 가능" options={regions} selected={selectedRegions} onChange={setSelectedRegions}/>
@@ -525,7 +525,7 @@ export default function App() {
   const Current = { about: About, 'structural-analysis': StructuralIndexAnalysis, 'fiscal-analysis': FiscalResponseAnalysis, 'relationship-analysis': RelationshipAnalysis, trends: Trends, structure: Structure, results: Results, quality: Quality, projects: ProjectList, download: Download, sources: Sources, references: References, license: DataLicense, 'content-license': ContentLicense, privacy: PrivacyPolicy, checksums: Checksums }[page] || About
   return <ThemeContext.Provider value={theme}><div className="site-shell">
     <a href="#main-content" className="skip-link">본문 바로가기</a>
-    <header className="topbar"><button className="brand" onClick={()=>navigate('about')} aria-label="Yumocha 홈"><span><img src="/logo.png" alt="" /></span><strong>Yumocha</strong></button>
+    <header className="topbar"><div className="brand-lockup"><button className="brand" onClick={()=>navigate('about')} aria-label="Yumocha 홈"><span><img src="/logo.png" alt="" /></span><strong>Yumocha</strong></button><p className="competition-name"><span>2026년 기획예산처</span>재정데이터 분석 대학(원)생 경진대회</p></div>
       <nav className={menu?'open':''}>{pages.map(p => p.children
         ? <div className="nav-group" key={p.label}>
             <button className={p.children.some(c=>c.id===page)?'active':''} aria-haspopup="true" aria-expanded={openGroup===p.label} onClick={()=>setOpenGroup(openGroup===p.label?null:p.label)}>{p.label}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
