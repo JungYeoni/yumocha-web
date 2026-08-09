@@ -4,6 +4,7 @@
 
 ### 문서
 
+- CHANGELOG 자동 업데이트 [skip ci] ([e9b38cb](https://github.com/JungYeoni/yumocha-web/commit/e9b38cb152902dcac4c25330a55ae13d776c86a2))
 - CHANGELOG 자동 업데이트 [skip ci] ([4aff183](https://github.com/JungYeoni/yumocha-web/commit/4aff183c59b6df788dd1e087937c08f45f5fe8c6))
 - CHANGELOG 자동 업데이트 [skip ci] ([5372622](https://github.com/JungYeoni/yumocha-web/commit/5372622dc7e06fcc05f7d603b82e3492fed84882))
 - CHANGELOG 자동 업데이트 [skip ci] ([8848223](https://github.com/JungYeoni/yumocha-web/commit/8848223a868730ac7cbcfe3fb339ed1b7f7c8227))
@@ -52,6 +53,7 @@
 
 ### 새 기능
 
+- 활용 데이터 내비게이션과 대회명 표기 ([21b8316](https://github.com/JungYeoni/yumocha-web/commit/21b831635c44695f99d347334432471613315287))
 - 검토완료 사업목록과 핵심어 탐색 업데이트 ([194eb48](https://github.com/JungYeoni/yumocha-web/commit/194eb485b9d6dca7ceb4b182a0f48724886b1309))
 - 분석 콘텐츠와 공개 데이터 정비 ([fd98bd4](https://github.com/JungYeoni/yumocha-web/commit/fd98bd480927532057c58548cd603e91c94d276e))
 
